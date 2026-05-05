@@ -1,16 +1,49 @@
-# React + Vite
+# ACEN Architecture Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, interactive architectural portfolio designed with a **Noir aesthetic**. This project features a custom 3D moodboard experience built with React, Three.js, and Framer Motion.
 
-Currently, two official plugins are available:
+## 🏗️ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Architectural Noir Aesthetic**: A deep, monochromatic design system focused on typography and space.
+- **Interactive 3D Moodboard**: A physics-enabled, draggable moodboard where cards float in a 3D-responsive scene.
+- **Custom Shaders**: A custom-built WebGL background shader that animates architectural building sketches.
+- **Dynamic Routing**: Fluid transitions between the home moodboard and project detail pages.
+- **Double-Click Interaction**: Refined navigation logic to prevent accidental clicks during card manipulation.
 
-## React Compiler
+## 🚀 Installation & Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Follow these steps to get the project running locally:
 
-## Expanding the ESLint configuration
+### 1. Clone the repository
+```bash
+git clone https://github.com/RAFLY404/chen-architecture.git
+cd chen-architecture
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Run the development server
+```bash
+npm run dev
+```
+The application will be available at `http://localhost:5173`.
+
+## 📦 Production Build
+
+To build the project for production:
+
+```bash
+npm run build
+```
+The output will be generated in the `dist/` directory, ready for deployment.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React 19
+- **3D Engine**: React Three Fiber & Drei
+- **Animation**: Framer Motion & Use-Gesture
+- **Styling**: Tailwind CSS
+- **Build Tool**: Vite
