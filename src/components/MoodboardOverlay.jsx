@@ -1,11 +1,42 @@
+import { useState, useEffect } from 'react';
 import PolaroidCard from './PolaroidCard';
 import TextCard from './TextCard';
 
+// Computes a scale factor relative to a reference desktop width.
+// On mobile the whole moodboard shrinks uniformly so positions stay proportional.
+function useViewportScale(referenceWidth = 1200) {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      setScale(w < referenceWidth ? w / referenceWidth : 1);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [referenceWidth]);
+
+  return scale;
+}
+
 export default function MoodboardOverlay() {
+  const scale = useViewportScale(1200);
+  // Compensate container size so after scaling it still fills the viewport
+  const pct = `${(1 / scale) * 100}%`;
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
-      {/* Container to enable pointer events for cards */}
-      <div className="absolute inset-0 pointer-events-none [&>*]:pointer-events-auto">
+      {/* Scale the entire moodboard relative to top-left origin */}
+      <div
+        className="absolute top-0 left-0 pointer-events-none [&>*]:pointer-events-auto"
+        style={{
+          width: pct,
+          height: pct,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        }}
+      >
         <PolaroidCard
           label="OBS. 001 / CONCRETE"
           gradient="linear-gradient(135deg, #c0c0c0, #888)"
@@ -16,7 +47,7 @@ export default function MoodboardOverlay() {
           left="25%"
           zIndexOffset={1}
         />
-        
+
         <PolaroidCard
           label="SPATIAL VOL"
           gradient="linear-gradient(135deg, #888, #555)"
@@ -27,7 +58,7 @@ export default function MoodboardOverlay() {
           left="45%"
           zIndexOffset={0}
         />
-        
+
         <PolaroidCard
           label="MATERIAL / TEXTURE"
           gradient="linear-gradient(135deg, #4db6ac, #7fb5a0)"
@@ -38,7 +69,7 @@ export default function MoodboardOverlay() {
           left="62%"
           zIndexOffset={2}
         />
-        
+
         <PolaroidCard
           label="CORE DETAIL"
           gradient="linear-gradient(135deg, #5c8a85, #3d6b65)"
@@ -50,7 +81,7 @@ export default function MoodboardOverlay() {
           zIndexOffset={3}
           isSmall={true}
         />
-        
+
         <PolaroidCard
           label="LIGHTING STUDY"
           gradient="linear-gradient(135deg, #1a3a5c, #c8b400)"
@@ -61,7 +92,7 @@ export default function MoodboardOverlay() {
           left="28%"
           zIndexOffset={1}
         />
-        
+
         <PolaroidCard
           label="ELEVATION 04"
           gradient="linear-gradient(135deg, #4db6ac, #a8d5cc)"
@@ -73,7 +104,7 @@ export default function MoodboardOverlay() {
           zIndexOffset={2}
           isLarge={true}
         />
-        
+
         <PolaroidCard
           label="CONTEXT / SITE"
           gradient="linear-gradient(135deg, #3d7a74, #6aaca5)"
@@ -95,7 +126,7 @@ export default function MoodboardOverlay() {
           width="340px"
           zIndexOffset={5}
         />
-        
+
         <TextCard
           italic={true}
           body="&quot;The light here at 4 PM is crucial. It must bleed into the lower gallery.&quot;"
