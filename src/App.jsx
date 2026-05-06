@@ -3,10 +3,10 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
-import Portfolio from './pages/Portfolio';
-import Studio from './pages/Studio';
-import Contact from './pages/Contact';
-import Journal from './pages/Journal';
+import Project from './pages/Project';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
+import WhatsOn from './pages/WhatsOn';
 
 export default function App() {
   return (
@@ -14,10 +14,10 @@ export default function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/studio" element={<Studio />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/journal" element={<Journal />} />
+        <Route path="/project" element={<Project />} />
+        <Route path="/what's on" element={<WhatsOn />} />
+        <Route path="/about us" element={<AboutUs />} />
+        <Route path="/contact us" element={<ContactUs />} />
         <Route path="/project/:id" element={<ProjectDetails />} />
       </Routes>
       <Footer />

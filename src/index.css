@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 
@@ -8,14 +8,24 @@ html, body, #root {
   margin: 0;
   padding: 0;
   background-color: #120e0c;
+  /* overflow hidden only on the root shell — inner pages handle their own scroll */
   overflow: hidden;
   color: #e8e4e0;
+  font-family: 'Poppins', sans-serif;
+  /* Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .font-editorial {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .font-mono {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Smooth momentum scroll on iOS */
+.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
 }
