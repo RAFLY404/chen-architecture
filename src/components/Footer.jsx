@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="absolute bottom-0 right-0 p-4 sm:p-10 z-50 pointer-events-auto">
         <div className="font-mono text-[9px] sm:text-[10px] tracking-widest text-[#7a7570] flex items-center">
           <button className="hover:text-[#e6e0d8] transition-colors border-b border-[#7a7570] hover:border-[#e6e0d8] pb-0.5">
-            ACEN ARCHITECTURE
+            ACEN ARCHITECT
           </button>
         </div>
       </div>
