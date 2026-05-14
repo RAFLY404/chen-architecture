@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function PolaroidCard({ label, gradient, imageUrl, initRotation, delay, top, left, zIndexOffset, isLarge, isSmall, dragX, dragY }) {
   const navigate = useNavigate();
+  const [isZooming, setIsZooming] = useState(false);
   const localX = useMotionValue(0);
   const localY = useMotionValue(0);
   
@@ -43,7 +44,7 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
     >
       <motion.div
         {...bind()}
-        whileHover={{ scale: 1.02 }}
+        whileHover={!isZooming ? { scale: 1.02 } : {}}
         style={{
           x: springX,
           y: springY,
@@ -63,8 +64,29 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
           style={{ background: gradient }}
           onDoubleClick={(e) => {
             e.stopPropagation();
+            if (isZooming) return;
+            setIsZooming(true);
+            setZIndex(99999);
+            
+            const root = document.getElementById('root');
+            if (root) {
+              document.body.style.overflow = 'hidden';
+              root.style.transformOrigin = `${e.clientX}px ${e.clientY}px`;
+              root.style.transition = 'transform 1s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.8s ease-in 0.2s';
+              root.style.transform = 'scale(15)';
+              root.style.opacity = '0';
+            }
+
             const slug = label.replace(/\//g, '').trim().replace(/\s+/g, '-').toLowerCase();
-            navigate(`/project/${slug}`);
+            setTimeout(() => {
+              navigate(`/project/${slug}`);
+              if (root) {
+                root.style.transition = 'none';
+                root.style.transform = 'none';
+                root.style.opacity = '1';
+                document.body.style.overflow = 'auto';
+              }
+            }, 1000);
           }}
         >
           {imageUrl && (
