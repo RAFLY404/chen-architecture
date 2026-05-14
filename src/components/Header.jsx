@@ -19,22 +19,9 @@ export default function Header() {
           />
         </a>
 
-        {/* Desktop nav — top right */}
-        <nav className="hidden md:flex items-center space-x-8">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item}
-              to={`/${item.toLowerCase()}`}
-              className="font-editorial text-xs tracking-[0.3em] uppercase text-[#e6e0d8] hover:underline hover:underline-offset-4 transition-all opacity-70 hover:opacity-100"
-            >
-              {item}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Mobile hamburger */}
+        {/* Mobile & Tablet hamburger */}
         <button
-          className="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none"
+          className="lg:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -44,9 +31,9 @@ export default function Header() {
         </button>
       </header>
 
-      {/* Mobile slide-down menu */}
+      {/* Mobile & Tablet slide-down menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/95 backdrop-blur-md z-40 flex flex-col items-center justify-center transition-all duration-500 ${
+        className={`lg:hidden fixed inset-0 bg-black/95 backdrop-blur-md z-40 flex flex-col items-center justify-center transition-all duration-500 ${
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
