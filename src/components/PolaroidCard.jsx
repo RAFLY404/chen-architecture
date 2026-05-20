@@ -50,17 +50,17 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
           y: springY,
           rotate: initRotation,
         }}
-        className={`group p-2 bg-[#1a1715]/90 backdrop-blur-md border border-[rgba(255,255,255,0.08)] shadow-2xl cursor-grab active:cursor-grabbing transition-shadow hover:shadow-[0_0_30px_rgba(255,255,255,0.03)] touch-none relative overflow-hidden ${width}`}
+        className={`group p-2 bg-white dark:bg-black backdrop-blur-md border border-black/10 dark:border-[rgba(255,255,255,0.08)] shadow-2xl cursor-grab active:cursor-grabbing transition-shadow hover:shadow-[0_0_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.03)] touch-none relative overflow-hidden ${width}`}
       >
         {/* Sketch Background Overlay */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none mix-blend-screen" style={{ backgroundImage: "url('/arch_sketch.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
+        <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-screen" style={{ backgroundImage: "url('/arch_sketch.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
         {/* Pin in top corner */}
         <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.6)] z-10" />
         
         {/* Image / Gradient area */}
         <div 
-          className={`w-full ${height} mb-3 border border-[rgba(255,255,255,0.05)] relative overflow-hidden cursor-pointer group-hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-shadow duration-300`} 
+          className={`w-full ${height} mb-3 border border-black/5 dark:border-[rgba(255,255,255,0.05)] relative overflow-hidden cursor-pointer group-hover:shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-shadow duration-300`} 
           style={{ background: gradient }}
           onDoubleClick={(e) => {
             e.stopPropagation();
@@ -97,7 +97,7 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
         </div>
         
         {/* Label */}
-        <div className="font-mono text-[9px] uppercase tracking-widest text-[#a0a0a0] px-1 pb-1 pt-1">
+        <div className="font-mono text-[9px] uppercase tracking-widest text-black/60 dark:text-[#a0a0a0] px-1 pb-1 pt-1">
           {label}
         </div>
       </motion.div>

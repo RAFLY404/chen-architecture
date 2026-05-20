@@ -45,17 +45,17 @@ export default function TextCard({ title, body, italic, top, left, delay, initRo
           rotate: initRotation,
           width,
         }}
-        className={`p-6 ${italic ? 'bg-[#1a1715]/90' : 'bg-[#120e0c]/90'} backdrop-blur-md border border-[rgba(255,255,255,0.08)] shadow-2xl cursor-grab active:cursor-grabbing hover:shadow-[0_0_30px_rgba(255,255,255,0.03)] touch-none`}
+        className={`p-6 ${italic ? 'bg-white/90 dark:bg-[#1a1715]/90' : 'bg-gray-50/90 dark:bg-[#120e0c]/90'} backdrop-blur-md border border-black/5 dark:border-[rgba(255,255,255,0.08)] shadow-2xl cursor-grab active:cursor-grabbing hover:shadow-[0_0_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.03)] touch-none`}
       >
         {/* Tape piece */}
-        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-10 h-3 bg-white/10 backdrop-blur-sm -rotate-2" />
+        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-10 h-3 bg-black/5 dark:bg-white/10 backdrop-blur-sm -rotate-2" />
         
         {title && (
-          <h3 className="font-mono text-[10px] tracking-widest text-[#e8e4e0] uppercase mb-4 font-bold">
+          <h3 className="font-mono text-[10px] tracking-widest text-black dark:text-[#e8e4e0] uppercase mb-4 font-bold">
             {title}
           </h3>
         )}
-        <p className={`font-editorial text-sm leading-relaxed ${italic ? 'italic text-[#c8c4c0]' : 'text-[#a0a0a0]'}`}>
+        <p className={`font-editorial text-sm leading-relaxed ${italic ? 'italic text-black/70 dark:text-[#c8c4c0]' : 'text-black/60 dark:text-[#a0a0a0]'}`}>
           {body}
         </p>
       </motion.div>

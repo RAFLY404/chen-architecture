@@ -9,7 +9,7 @@ export default function Footer() {
           <Link
             key={item}
             to={`/${item.toLowerCase()}`}
-            className="font-editorial text-[10px] tracking-[0.2em] lowercase text-[#e6e0d8] hover:underline hover:underline-offset-4 transition-all opacity-80 hover:opacity-100"
+            className="font-editorial text-[10px] tracking-[0.2em] lowercase text-stone-900 dark:text-[#e6e0d8] hover:underline hover:underline-offset-4 transition-all opacity-80 hover:opacity-100"
           >
             {item}
           </Link>

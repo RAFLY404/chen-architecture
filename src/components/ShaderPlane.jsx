@@ -6,11 +6,14 @@ import { useTexture } from '@react-three/drei';
 import vertexShader from '../shaders/gradient.vert.glsl?raw';
 import fragmentShader from '../shaders/gradient.frag.glsl?raw';
 
-export default function ShaderPlane({ mouse }) {
+export default function ShaderPlane({ mouse, theme }) {
   const meshRef = useRef();
   const materialRef = useRef();
   
-  const texture = useTexture('/arch_sketch.png');
+  const texture = useTexture('/arch_sketch.png', (tex) => {
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+  });
 
   const { viewport, size } = useThree();
   const [position, setPosition] = useState([0, 0, 0]);
@@ -26,13 +29,19 @@ export default function ShaderPlane({ mouse }) {
       uTime: { value: 0 },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uTexture: { value: texture },
+      uTheme: { value: theme === 'light' ? 1.0 : 0.0 }
     }),
-    [texture]
+    [texture, theme]
   );
 
   useFrame((state) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+      materialRef.current.uniforms.uTheme.value = THREE.MathUtils.lerp(
+        materialRef.current.uniforms.uTheme.value,
+        theme === 'light' ? 1.0 : 0.0,
+        0.1
+      );
       materialRef.current.uniforms.uMouse.value.lerp(
         new THREE.Vector2(mouse.current.x, mouse.current.y),
         0.05
@@ -66,7 +75,7 @@ export default function ShaderPlane({ mouse }) {
 
   return (
     <mesh ref={meshRef} {...bind()}>
-      <planeGeometry args={[15, 15, 128, 128]} />
+      <planeGeometry args={[40, 40, 128, 128]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}

@@ -10,7 +10,7 @@ import WhatsOn from './pages/WhatsOn';
 
 export default function App() {
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-black selection:bg-[#e6e0d8]/30 text-[#e6e0d8]">
+    <div className="relative w-screen h-screen overflow-hidden bg-[#f5f5f5] dark:bg-black selection:bg-black/10 dark:selection:bg-[#e6e0d8]/30 text-[#1a1715] dark:text-[#e6e0d8] transition-colors duration-300">
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
