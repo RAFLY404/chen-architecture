@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useDrag } from '@use-gesture/react';
 import { useNavigate } from 'react-router-dom';
 
-export default function PolaroidCard({ label, gradient, imageUrl, initRotation, delay, top, left, zIndexOffset, isLarge, isSmall, dragX, dragY }) {
+export default function PolaroidCard({ label, gradient, imageUrl, delay, top, left, zIndexOffset, isLarge, isSmall, dragX, dragY, width }) {
   const navigate = useNavigate();
   const [isZooming, setIsZooming] = useState(false);
   const localX = useMotionValue(0);
@@ -24,8 +24,8 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
     y.set(params.offset[1]);
   });
 
-  const width = isLarge ? 'w-72' : isSmall ? 'w-48' : 'w-64';
-  const height = isLarge ? 'h-72' : isSmall ? 'h-48' : 'h-64';
+  // Use percentage width for responsiveness, allowing override from width prop
+  const cardWidth = width || (isLarge ? '26%' : isSmall ? '18%' : '22%');
   
   return (
     <motion.div
@@ -38,6 +38,7 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
         position: 'absolute',
         top,
         left,
+        width: cardWidth,
         zIndex,
       }}
       className="pointer-events-auto"
@@ -48,19 +49,19 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
         style={{
           x: springX,
           y: springY,
-          rotate: initRotation,
+          rotate: 0,
         }}
-        className={`group p-2 bg-white dark:bg-black backdrop-blur-md border border-black/10 dark:border-[rgba(255,255,255,0.08)] shadow-2xl cursor-grab active:cursor-grabbing transition-shadow hover:shadow-[0_0_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.03)] touch-none relative overflow-hidden ${width}`}
+        className="group p-1.5 sm:p-2 bg-white dark:bg-black backdrop-blur-md border border-black/10 dark:border-[rgba(255,255,255,0.08)] shadow-2xl cursor-grab active:cursor-grabbing transition-shadow hover:shadow-[0_0_30px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.03)] touch-none relative overflow-hidden w-full"
       >
         {/* Sketch Background Overlay */}
         <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-screen" style={{ backgroundImage: "url('/arch_sketch.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
         {/* Pin in top corner */}
-        <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.6)] z-10" />
+        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.6)] z-10" />
         
         {/* Image / Gradient area */}
         <div 
-          className={`w-full ${height} mb-3 border border-black/5 dark:border-[rgba(255,255,255,0.05)] relative overflow-hidden cursor-pointer group-hover:shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-shadow duration-300`} 
+          className="w-full aspect-square mb-1.5 sm:mb-2 border border-black/5 dark:border-[rgba(255,255,255,0.05)] relative overflow-hidden cursor-pointer group-hover:shadow-[0_0_15px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-shadow duration-300" 
           style={{ background: gradient }}
           onDoubleClick={(e) => {
             e.stopPropagation();
@@ -97,7 +98,7 @@ export default function PolaroidCard({ label, gradient, imageUrl, initRotation, 
         </div>
         
         {/* Label */}
-        <div className="font-mono text-[9px] uppercase tracking-widest text-black/60 dark:text-[#a0a0a0] px-1 pb-1 pt-1">
+        <div className="font-karla text-[7px] sm:text-[8px] md:text-[9px] uppercase tracking-widest text-black/60 dark:text-[#a0a0a0] px-0.5 sm:px-1 pb-0.5 sm:pb-1 pt-0.5 sm:pt-1 truncate">
           {label}
         </div>
       </motion.div>

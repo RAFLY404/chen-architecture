@@ -26,23 +26,37 @@ void main() {
   vec3 bgColor = mix(color1, color2, mixValue1);
   bgColor = mix(bgColor, color3, mixValue2);
   
-  // Sample the sketch texture, tiling it to fill the huge background
-  vec2 texUv = vUv * 6.0;
-  // Slowly pan the texture for minimal transition effect
-  texUv += vec2(uTime * 0.005, uTime * 0.003);
-  vec4 texColor = texture2D(uTexture, texUv);
+  // Procedural Blueprint Grid (Major and Minor grid lines)
+  vec2 coord = vUv * 40.0;
   
-  // The sketch is mostly white/grey with black lines or vice versa.
-  // Convert texture to intensity
-  float intensity = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
+  // Slowly pan the grid for a subtle, elegant dynamic effect
+  coord += vec2(uTime * 0.03, uTime * 0.018);
+
+  // Compute fractional coordinates for grid lines
+  // f1 represents minor lines (spaced every 0.2 units)
+  // f2 represents major lines (spaced every 1.0 unit)
+  vec2 f1 = abs(fract(coord * 5.0 - 0.5) - 0.5) / 5.0;
+  vec2 f2 = abs(fract(coord * 1.0 - 0.5) - 0.5) / 1.0;
   
-  // We'll use the sketch texture as a subtle overlay
+  // Define grid line thicknesses and smooth anti-aliasing edges
+  float thick1 = 0.0005; 
+  float edge1 = 0.0012;
+  float thick2 = 0.0018;
+  float edge2 = 0.0028;
+  
+  float val1 = 1.0 - smoothstep(thick1, thick1 + edge1, min(f1.x, f1.y));
+  float val2 = 1.0 - smoothstep(thick2, thick2 + edge2, min(f2.x, f2.y));
+  
+  // Combine minor and major grid lines
+  float gridValue = max(val1 * 0.22, val2 * 0.55);
+  
+  // We'll use the blueprint grid as a subtle overlay
   vec3 darkSketch = vec3(0.8, 0.85, 0.9); // Off-white for dark mode
   vec3 lightSketch = vec3(0.1, 0.1, 0.15); // Dark for light mode
   vec3 sketchColor = mix(darkSketch, lightSketch, uTheme);
   
-  // Add the texture over the background
-  vec3 finalColor = mix(bgColor, sketchColor, intensity * 0.3);
+  // Add the grid over the background
+  vec3 finalColor = mix(bgColor, sketchColor, gridValue * 0.18);
   
   // Add some mouse interaction spotlight
   float mouseDistance = distance(vUv, uMouse * 0.5 + 0.5);

@@ -41,7 +41,7 @@ export default function Project() {
         {/* Back Link */}
         <Link 
           to="/" 
-          className="inline-block mb-10 font-mono text-xs tracking-[0.2em] text-stone-500 dark:text-[#8a8580] hover:text-stone-900 dark:hover:text-[#e6e0d8] uppercase transition-colors"
+          className="inline-block mb-10 font-karla text-xs tracking-[0.2em] text-stone-500 dark:text-[#8a8580] hover:text-stone-900 dark:hover:text-[#e6e0d8] uppercase transition-colors"
         >
           ← Back to Board
         </Link>
@@ -53,14 +53,14 @@ export default function Project() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12 sm:mb-16"
         >
-          <span className="font-mono text-xs tracking-[0.3em] uppercase text-stone-400 dark:text-[#6b6661] block mb-3">
+          <span className="font-karla text-xs tracking-[0.3em] uppercase text-stone-400 dark:text-[#6b6661] block mb-3">
             ARCHIVE / PORTFOLIO
           </span>
-          <h1 className="font-editorial text-5xl sm:text-6xl md:text-8xl font-extralight text-stone-900 dark:text-[#e6e0d8] leading-none uppercase tracking-wide">
+          <h1 className="font-karla text-5xl sm:text-6xl md:text-8xl text-stone-900 dark:text-[#e6e0d8] leading-none uppercase tracking-wide">
             PROJECTS
           </h1>
           <div className="h-px w-20 bg-stone-900 dark:bg-[#e6e0d8] mt-6 mb-8" />
-          <p className="font-serif text-stone-600 dark:text-[#a8a4a0] text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">
+          <p className="font-karla text-stone-600 dark:text-[#a8a4a0] text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">
             A comprehensive catalog of architectural structures, volumetric studies, and spatial concepts exploring tropical climate design and material truth.
           </p>
         </motion.div>
@@ -77,7 +77,7 @@ export default function Project() {
               <button
                 key={typology}
                 onClick={() => setSelectedTypology(typology)}
-                className={`font-mono text-xs tracking-[0.2em] uppercase pb-2 relative transition-colors duration-300 ${
+                className={`font-karla text-xs tracking-[0.2em] uppercase pb-2 relative transition-colors duration-300 ${
                   selectedTypology === typology
                     ? 'text-stone-900 dark:text-[#e6e0d8]'
                     : 'text-stone-400 dark:text-[#6b6661] hover:text-stone-600 dark:hover:text-[#a8a4a0]'
@@ -145,10 +145,10 @@ export default function Project() {
                       
                       {/* Bottom bar */}
                       <div className="flex justify-between items-center w-full">
-                        <span className="font-mono text-[9px] tracking-wider text-white/95 uppercase bg-black/45 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10">
+                        <span className="font-karla text-[9px] tracking-wider text-white/95 uppercase bg-black/45 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10">
                           {project.location.split(',')[0]}
                         </span>
-                        <span className="w-6 h-6 rounded-full bg-white/95 dark:bg-stone-900/95 flex items-center justify-center text-stone-850 dark:text-[#e6e0d8] border border-white/20 shadow-xs font-mono text-xs">
+                        <span className="w-6 h-6 rounded-full bg-white/95 dark:bg-stone-900/95 flex items-center justify-center text-stone-850 dark:text-[#e6e0d8] border border-white/20 shadow-xs font-karla text-xs">
                           ↗
                         </span>
                       </div>
@@ -157,19 +157,19 @@ export default function Project() {
 
                   {/* Details section */}
                   <div className="pt-3 pb-2 px-1">
-                    <h3 className="font-karla text-sm font-semibold tracking-tight text-stone-900 dark:text-[#e6e0d8] group-hover:underline transition-all duration-300 leading-tight">
+                    <h3 className="font-karla text-sm tracking-tight text-stone-900 dark:text-[#e6e0d8] group-hover:underline transition-all duration-300 leading-tight">
                       {project.title}
                     </h3>
                     
                     <div className="flex items-center mt-2">
                       {/* Creator badge */}
-                      <div className="w-5 h-5 rounded-full bg-stone-200 dark:bg-stone-800 flex items-center justify-center text-[9px] font-mono text-stone-700 dark:text-stone-300 font-bold mr-2">
+                      <div className="w-5 h-5 rounded-full bg-stone-200 dark:bg-stone-800 flex items-center justify-center text-[9px] font-karla text-stone-700 dark:text-stone-300 mr-2">
                         A
                       </div>
-                      <span className="font-karla text-xs font-medium text-stone-600 dark:text-stone-400">
+                      <span className="font-karla text-xs text-stone-600 dark:text-stone-400">
                         ACEN Studio
                       </span>
-                      <span className="ml-auto font-mono text-[9px] text-stone-400 dark:text-stone-500">
+                      <span className="ml-auto font-karla text-[9px] text-stone-400 dark:text-stone-500">
                         {project.year}
                       </span>
                     </div>

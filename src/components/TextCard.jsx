@@ -51,11 +51,11 @@ export default function TextCard({ title, body, italic, top, left, delay, initRo
         <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-10 h-3 bg-black/5 dark:bg-white/10 backdrop-blur-sm -rotate-2" />
         
         {title && (
-          <h3 className="font-mono text-[10px] tracking-widest text-black dark:text-[#e8e4e0] uppercase mb-4 font-bold">
+          <h3 className="font-karla text-[10px] tracking-widest text-black dark:text-[#e8e4e0] uppercase mb-4">
             {title}
           </h3>
         )}
-        <p className={`font-editorial text-sm leading-relaxed ${italic ? 'italic text-black/70 dark:text-[#c8c4c0]' : 'text-black/60 dark:text-[#a0a0a0]'}`}>
+        <p className={`font-karla text-sm leading-relaxed ${italic ? 'italic text-black/70 dark:text-[#c8c4c0]' : 'text-black/60 dark:text-[#a0a0a0]'}`}>
           {body}
         </p>
       </motion.div>

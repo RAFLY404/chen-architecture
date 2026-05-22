@@ -7,6 +7,7 @@ import Project from './pages/Project';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import WhatsOn from './pages/WhatsOn';
+import WhatsOnDetails from './pages/WhatsOnDetails';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/project" element={<Project />} />
         <Route path="/what's on" element={<WhatsOn />} />
+        <Route path="/what's on/:id" element={<WhatsOnDetails />} />
         <Route path="/about us" element={<AboutUs />} />
         <Route path="/contact us" element={<ContactUs />} />
         <Route path="/project/:id" element={<ProjectDetails />} />

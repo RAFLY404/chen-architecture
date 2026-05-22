@@ -1,37 +1,104 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { newsArticles } from '../data/news';
 
 export default function WhatsOn() {
   return (
-    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-stone-50 dark:bg-black">
-      <div className="max-w-4xl mx-auto px-5 sm:px-10 pt-28 sm:pt-40 pb-24 sm:pb-20 pointer-events-auto">
-        <Link to="/" className="inline-block mb-8 sm:mb-10 font-mono text-xs tracking-widest text-stone-500 dark:text-[#a0a0a0] hover:text-stone-900 dark:hover:text-[#e6e0d8] uppercase transition-colors">
-          ← Back to Home
-        </Link>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-40 pb-24 sm:pb-32 pointer-events-auto">
+        
+        {/* Back Link */}
+        <Link 
+          to="/" 
+          className="inline-block mb-10 font-karla text-xs tracking-[0.2em] text-[#666666] dark:text-[#8a8580] hover:text-black dark:hover:text-white uppercase transition-colors"
         >
-          <h1 className="font-editorial text-4xl sm:text-5xl md:text-7xl font-light text-stone-900 dark:text-[#e6e0d8] mb-6 uppercase tracking-wide">
+          ← Back to Board
+        </Link>
+
+        {/* Title Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16 md:mb-20"
+        >
+          <span className="font-karla text-xs tracking-[0.3em] uppercase text-stone-400 dark:text-[#6b6661] block mb-3">
+            JOURNAL / ARCHIVE
+          </span>
+          <h1 className="font-karla text-4xl sm:text-5xl md:text-6xl text-stone-900 dark:text-[#e6e0d8] leading-none uppercase tracking-wide">
             WHAT'S ON
           </h1>
-          <p className="font-serif text-base sm:text-lg md:text-xl leading-relaxed text-stone-700 dark:text-[#c8c4c0] mb-8 sm:mb-12 max-w-2xl">
-            Thoughts on architecture, materials, light, and the intersection of space and time.
+          <div className="h-px w-20 bg-stone-900 dark:bg-[#e6e0d8] mt-6 mb-8" />
+          <p className="font-karla text-[#666666] dark:text-[#a8a4a0] text-base sm:text-lg leading-relaxed max-w-2xl">
+            Recent activities, exhibitions, awards, and lecture series from our creative collaborative practice.
           </p>
-          <div className="space-y-10 sm:space-y-12 border-t border-stone-200 dark:border-[rgba(255,255,255,0.1)] pt-10 sm:pt-12">
-            <article className="group cursor-pointer">
-              <p className="font-mono text-[10px] tracking-widest text-stone-500 dark:text-[#7a7570] mb-2">OCTOBER 12, 2026</p>
-              <h2 className="font-editorial text-xl sm:text-2xl text-stone-900 dark:text-[#e6e0d8] group-hover:text-black dark:group-hover:text-white transition-colors mb-3 sm:mb-4">The Brutal Honesty of Cast Concrete</h2>
-              <p className="font-serif text-stone-600 dark:text-[#a0a0a0] text-sm sm:text-base">An exploration of formwork textures and how they capture the memory of construction...</p>
-            </article>
-            <article className="group cursor-pointer">
-              <p className="font-mono text-[10px] tracking-widest text-stone-500 dark:text-[#7a7570] mb-2">SEPTEMBER 04, 2026</p>
-              <h2 className="font-editorial text-xl sm:text-2xl text-stone-900 dark:text-[#e6e0d8] group-hover:text-black dark:group-hover:text-white transition-colors mb-3 sm:mb-4">Light as a Structural Element</h2>
-              <p className="font-serif text-stone-600 dark:text-[#a0a0a0] text-sm sm:text-base">How we use natural illumination to define spatial boundaries without physical walls...</p>
-            </article>
-          </div>
         </motion.div>
+
+        {/* News Grid (2 Columns on desktop/tablet, 1 Column on mobile, 3rem / 48px gap) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-stone-200/60 dark:border-stone-800/20 pt-12 md:pt-16">
+          {newsArticles.map((article, index) => (
+            <motion.article 
+              key={article.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+              className="group flex flex-col hover:-translate-y-[2px] transition-transform duration-300"
+            >
+              {/* Aspect Ratio 3:1 Thumbnail with 4px border radius */}
+              <Link 
+                to={`/what's on/${article.id}`} 
+                className="block overflow-hidden rounded-[4px] mb-5 relative aspect-[3/1] bg-stone-100 dark:bg-[#151210] border border-stone-200/10 dark:border-stone-850/5"
+              >
+                {/* Visual architectural grid sketch pattern background */}
+                <div 
+                  className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen" 
+                  style={{ 
+                    backgroundImage: "url('/arch_sketch.png')", 
+                    backgroundSize: 'cover', 
+                    backgroundPosition: 'center' 
+                  }} 
+                />
+                
+                <img 
+                  src={article.heroImage} 
+                  alt={article.title}
+                  className="w-full h-full object-cover filter grayscale-[0.05] group-hover:grayscale-0 transition-transform duration-[1.2s] ease-[0.16, 1, 0.3, 1] group-hover:scale-105"
+                  loading="lazy"
+                />
+              </Link>
+
+              {/* Date / Metadata: Regular (400), 0.85rem (13.6px), grey #666666 */}
+              <div className="font-karla text-[0.85rem] text-[#666666] dark:text-[#8a8580] uppercase mb-3 flex items-center gap-2">
+                <span>{article.date}</span>
+                <span className="w-1 h-1 rounded-full bg-stone-300 dark:bg-[#2c2825]" />
+                <span>{article.readTime}</span>
+              </div>
+
+              {/* Title: Bold (700), 1.2rem (19.2px), default black/white, grey #666666 on hover */}
+              <h2 className="font-karla text-[1.2rem] text-stone-900 dark:text-[#e6e0d8] group-hover:text-[#666666] dark:group-hover:text-stone-400 transition-colors duration-300 leading-snug mb-3">
+                <Link to={`/what's on/${article.id}`}>
+                  {article.title}
+                </Link>
+              </h2>
+
+              {/* Excerpt: Regular (400), 0.9rem (14.4px), line-height 1.6, charcoal #333333 */}
+              <p className="font-karla text-[0.9rem] leading-[1.6] text-[#333333] dark:text-[#a0a0a0] mb-4 flex-grow">
+                {article.excerpt}
+              </p>
+
+              {/* Read More link: Bold (700), uppercase, 0.85rem (13.6px), grey #666666 on hover */}
+              <div>
+                <Link 
+                  to={`/what's on/${article.id}`}
+                  className="inline-flex items-center font-karla uppercase text-[0.85rem] text-stone-900 dark:text-[#e6e0d8] group-hover:text-[#666666] dark:group-hover:text-stone-400 transition-colors duration-300"
+                >
+                  Read More <span className="ml-1.5 transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </Link>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+
       </div>
     </div>
   );
