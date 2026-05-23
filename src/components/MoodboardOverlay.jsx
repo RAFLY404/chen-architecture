@@ -32,7 +32,7 @@ const CARDS = [
     zIndexOffset: 1,
     delay: 0.1,
     desktop: { top: "16%", left: "8.8%", width: "14%" },
-    tablet: { top: "8%", left: "6%", width: "26%" },
+    tablet: { top: "22%", left: "4%", width: "20%" },
     mobile: { top: "8%", left: "12%", width: "32%" }
   },
   {
@@ -43,7 +43,7 @@ const CARDS = [
     zIndexOffset: 2,
     delay: 0.2,
     desktop: { top: "16%", left: "31.6%", width: "14%" },
-    tablet: { top: "8%", left: "37%", width: "26%" },
+    tablet: { top: "22%", left: "28%", width: "20%" },
     mobile: { top: "8%", left: "56%", width: "32%" }
   },
   {
@@ -54,7 +54,7 @@ const CARDS = [
     zIndexOffset: 3,
     delay: 0.3,
     desktop: { top: "16%", left: "54.4%", width: "14%" },
-    tablet: { top: "8%", left: "68%", width: "26%" },
+    tablet: { top: "22%", left: "52%", width: "20%" },
     mobile: { top: "30%", left: "12%", width: "32%" }
   },
   {
@@ -65,7 +65,7 @@ const CARDS = [
     zIndexOffset: 4,
     delay: 0.4,
     desktop: { top: "16%", left: "77.2%", width: "14%" },
-    tablet: { top: "39%", left: "6%", width: "26%" },
+    tablet: { top: "22%", left: "76%", width: "20%" },
     mobile: { top: "30%", left: "56%", width: "32%" }
   },
   {
@@ -76,7 +76,7 @@ const CARDS = [
     zIndexOffset: 5,
     delay: 0.5,
     desktop: { top: "54%", left: "8.8%", width: "14%" },
-    tablet: { top: "39%", left: "37%", width: "26%" },
+    tablet: { top: "54%", left: "4%", width: "20%" },
     mobile: { top: "52%", left: "12%", width: "32%" }
   },
   {
@@ -87,7 +87,7 @@ const CARDS = [
     zIndexOffset: 6,
     delay: 0.6,
     desktop: { top: "54%", left: "31.6%", width: "14%" },
-    tablet: { top: "39%", left: "68%", width: "26%" },
+    tablet: { top: "54%", left: "28%", width: "20%" },
     mobile: { top: "52%", left: "56%", width: "32%" }
   },
   {
@@ -98,7 +98,7 @@ const CARDS = [
     zIndexOffset: 7,
     delay: 0.7,
     desktop: { top: "54%", left: "54.4%", width: "14%" },
-    tablet: { top: "70%", left: "21.5%", width: "26%" },
+    tablet: { top: "54%", left: "52%", width: "20%" },
     mobile: { top: "74%", left: "12%", width: "32%" }
   },
   {
@@ -109,7 +109,7 @@ const CARDS = [
     zIndexOffset: 8,
     delay: 0.8,
     desktop: { top: "54%", left: "77.2%", width: "14%" },
-    tablet: { top: "70%", left: "52.5%", width: "26%" },
+    tablet: { top: "54%", left: "76%", width: "20%" },
     mobile: { top: "74%", left: "56%", width: "32%" }
   }
 ];
