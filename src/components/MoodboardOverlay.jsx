@@ -32,7 +32,7 @@ const CARDS = [
     zIndexOffset: 1,
     delay: 0.1,
     desktop: { top: "16%", left: "8.8%", width: "14%" },
-    tablet: { top: "18%", left: "7.2%", width: "16%" },
+    tablet: { top: "4%", left: "4%", width: "28%" },
     mobile: { top: "8%", left: "12%", width: "32%" }
   },
   {
@@ -43,7 +43,7 @@ const CARDS = [
     zIndexOffset: 2,
     delay: 0.2,
     desktop: { top: "16%", left: "31.6%", width: "14%" },
-    tablet: { top: "18%", left: "30.4%", width: "16%" },
+    tablet: { top: "4%", left: "36%", width: "28%" },
     mobile: { top: "8%", left: "56%", width: "32%" }
   },
   {
@@ -54,7 +54,7 @@ const CARDS = [
     zIndexOffset: 3,
     delay: 0.3,
     desktop: { top: "16%", left: "54.4%", width: "14%" },
-    tablet: { top: "18%", left: "53.6%", width: "16%" },
+    tablet: { top: "4%", left: "68%", width: "28%" },
     mobile: { top: "30%", left: "12%", width: "32%" }
   },
   {
@@ -65,7 +65,7 @@ const CARDS = [
     zIndexOffset: 4,
     delay: 0.4,
     desktop: { top: "16%", left: "77.2%", width: "14%" },
-    tablet: { top: "18%", left: "76.8%", width: "16%" },
+    tablet: { top: "36%", left: "4%", width: "28%" },
     mobile: { top: "30%", left: "56%", width: "32%" }
   },
   {
@@ -76,7 +76,7 @@ const CARDS = [
     zIndexOffset: 5,
     delay: 0.5,
     desktop: { top: "54%", left: "8.8%", width: "14%" },
-    tablet: { top: "58%", left: "7.2%", width: "16%" },
+    tablet: { top: "36%", left: "36%", width: "28%" },
     mobile: { top: "52%", left: "12%", width: "32%" }
   },
   {
@@ -87,7 +87,7 @@ const CARDS = [
     zIndexOffset: 6,
     delay: 0.6,
     desktop: { top: "54%", left: "31.6%", width: "14%" },
-    tablet: { top: "58%", left: "30.4%", width: "16%" },
+    tablet: { top: "36%", left: "68%", width: "28%" },
     mobile: { top: "52%", left: "56%", width: "32%" }
   },
   {
@@ -98,7 +98,7 @@ const CARDS = [
     zIndexOffset: 7,
     delay: 0.7,
     desktop: { top: "54%", left: "54.4%", width: "14%" },
-    tablet: { top: "58%", left: "53.6%", width: "16%" },
+    tablet: { top: "68%", left: "20%", width: "28%" },
     mobile: { top: "74%", left: "12%", width: "32%" }
   },
   {
@@ -109,7 +109,7 @@ const CARDS = [
     zIndexOffset: 8,
     delay: 0.8,
     desktop: { top: "54%", left: "77.2%", width: "14%" },
-    tablet: { top: "58%", left: "76.8%", width: "16%" },
+    tablet: { top: "68%", left: "52%", width: "28%" },
     mobile: { top: "74%", left: "56%", width: "32%" }
   }
 ];
@@ -119,7 +119,7 @@ export default function MoodboardOverlay() {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-10 flex items-center justify-center">
-      <div className="w-[80vw] h-[80vh] md:w-[60vw] md:h-[70vh] relative pointer-events-none [&>*]:pointer-events-auto">
+      <div className="w-[80vw] h-[80vh] md:w-[75vw] md:h-[75vh] lg:w-[60vw] lg:h-[70vh] relative pointer-events-none [&>*]:pointer-events-auto">
         {CARDS.map((card) => {
           const config = card[breakpoint];
           return (
