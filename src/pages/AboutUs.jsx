@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useTheme } from '../ThemeContext';
+import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 // Award / Recognition items
 const RECOGNITIONS = [
@@ -21,8 +23,8 @@ const PUBLICATIONS = [
   'Designverse', 'Indesignlive', 'Tecture Mag',
 ];
 
-// Team members
-const TEAM_MEMBERS = [
+// Fallback Team members
+const MOCK_TEAM_MEMBERS = [
   {
     name: 'Rafly Acen',
     role: 'Principal Architect',
@@ -55,6 +57,25 @@ const TEAM_MEMBERS = [
 
 export default function AboutUs() {
   const { theme } = useTheme();
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(getApiUrl('/team'))
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch team members');
+        return res.json();
+      })
+      .then((data) => {
+        setTeamMembers(data && data.length > 0 ? data : MOCK_TEAM_MEMBERS);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching team members, falling back to mock:', err);
+        setTeamMembers(MOCK_TEAM_MEMBERS);
+        setLoading(false);
+      });
+  }, []);
 
   const fadeUp = {
     initial: { opacity: 0, y: 25 },
@@ -64,7 +85,7 @@ export default function AboutUs() {
   };
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-white dark:bg-[#0c0a09] transition-colors duration-300">
+    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-white dark:bg-[#0c0a09] transition-colors duration-300 lg:pl-[300px]">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-0 pointer-events-auto">
 
         {/* Back Link */}
@@ -144,9 +165,9 @@ export default function AboutUs() {
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
-            {TEAM_MEMBERS.map((member, index) => (
+            {teamMembers.map((member, index) => (
               <motion.div
-                key={member.name}
+                key={member.id || member.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
@@ -156,7 +177,7 @@ export default function AboutUs() {
                 {/* Portrait */}
                 <div className="relative w-full aspect-[3/4] overflow-hidden rounded-sm bg-stone-100 dark:bg-[#151210] mb-4">
                   <img
-                    src={member.image}
+                    src={resolveImageUrl(member.image)}
                     alt={member.name}
                     className="w-full h-full object-cover object-top filter grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.03]"
                   />

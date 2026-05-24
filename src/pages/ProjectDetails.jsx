@@ -1,37 +1,73 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
+import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 export default function ProjectDetails() {
   const { id } = useParams();
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Normalization resolver to ensure double-clicks from the moodboard route correctly
-  const getProject = () => {
-    if (!id) return null;
+  useEffect(() => {
+    fetch(getApiUrl('/projects'))
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch projects');
+        return res.json();
+      })
+      .then((data) => {
+        const list = data && data.length > 0 ? data : projects;
+        resolveProjectFromList(list);
+      })
+      .catch((err) => {
+        console.error('Error fetching projects, falling back to mock:', err);
+        resolveProjectFromList(projects);
+      });
+  }, [id]);
+
+  const resolveProjectFromList = (list) => {
+    if (!id) {
+      setProject(null);
+      setLoading(false);
+      return;
+    }
     const clean = id.toLowerCase().replace(/[^a-z0-9]/g, '');
 
+    let found = null;
     // Explicit mappings for moodboard polaroid labels
     if (clean === 'contextsite' || clean === 'lightingstudy' || clean === 'coredetail' || clean === 'chickenheropavilion') {
-      return projects.find((p) => p.id === 'chicken-hero-pavilion');
-    }
-    if (clean === 'spatialvol' || clean === 'spatialvolume') {
-      return projects.find((p) => p.id === 'spatial-volume');
-    }
-    if (clean === 'elevation04' || clean === 'obs002glass') {
-      return projects.find((p) => p.id === 'obs-002-glass');
-    }
-    if (clean === 'obs001concrete') {
-      return projects.find((p) => p.id === 'obs-001-concrete');
+      found = list.find((p) => p.id === 'chicken-hero-pavilion');
+    } else if (clean === 'spatialvol' || clean === 'spatialvolume') {
+      found = list.find((p) => p.id === 'spatial-volume');
+    } else if (clean === 'elevation04' || clean === 'obs002glass') {
+      found = list.find((p) => p.id === 'obs-002-glass');
+    } else if (clean === 'obs001concrete') {
+      found = list.find((p) => p.id === 'obs-001-concrete');
     }
 
-    // Fallback search
-    return projects.find((p) => {
-      const pClean = p.id.replace(/[^a-z0-9]/g, '');
-      return pClean === clean || pClean.includes(clean) || clean.includes(pClean);
-    }) || projects[0];
+    if (!found) {
+      // Fallback search
+      found = list.find((p) => {
+        const pClean = p.id.replace(/[^a-z0-9]/g, '');
+        return pClean === clean || pClean.includes(clean) || clean.includes(pClean);
+      });
+    }
+
+    if (!found && list.length > 0) {
+      found = list[0];
+    }
+
+    setProject(found);
+    setLoading(false);
   };
 
-  const project = getProject();
+  if (loading) {
+    return (
+      <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-[#fbfbfa] dark:bg-[#0c0a09] z-40 text-stone-900 dark:text-[#e6e0d8]">
+        <p className="font-mono text-sm tracking-widest uppercase animate-pulse">Loading Details...</p>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -149,7 +185,7 @@ export default function ProjectDetails() {
   });
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] selection:bg-stone-900/10 dark:selection:bg-white/10 flex flex-col transition-colors duration-300">
+    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] selection:bg-stone-900/10 dark:selection:bg-white/10 flex flex-col transition-colors duration-300 lg:pl-[300px]">
       
       {/* MAIN CONTENT AREA */}
       <main className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-40 pb-10 lg:pb-20 flex-grow font-karla">
@@ -171,7 +207,7 @@ export default function ProjectDetails() {
         <motion.section {...animProps(0.1)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16 lg:mb-24">
           <div className="lg:col-span-9 overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
             <img 
-              src={project.heroImage} 
+              src={resolveImageUrl(project.heroImage)} 
               alt={project.title} 
               className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[1s]"
             />
@@ -207,7 +243,7 @@ export default function ProjectDetails() {
           <div className="lg:col-span-8 space-y-3">
             <div className="overflow-hidden bg-stone-50 dark:bg-[#110f0e] border border-stone-200/30 dark:border-stone-850/30 rounded-sm p-4 md:p-8 flex items-center justify-center">
               <img 
-                src={getDiagramForProject(project.id)} 
+                src={resolveImageUrl(getDiagramForProject(project.id))} 
                 alt={`${project.title} Structural Diagram`} 
                 className="w-full h-auto max-h-[60vh] object-contain filter dark:brightness-100 transition-all duration-[1s] hover:scale-[1.01]"
               />
@@ -224,7 +260,7 @@ export default function ProjectDetails() {
             <div className="space-y-3">
               <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                 <img 
-                  src={project.images[0]} 
+                  src={resolveImageUrl(project.images[0])} 
                   alt={`${project.title} doc 01`} 
                   className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s] hover:scale-[1.015]"
                 />
@@ -236,7 +272,7 @@ export default function ProjectDetails() {
             <div className="space-y-3 md:mt-16">
               <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                 <img 
-                  src={project.images[1]} 
+                  src={resolveImageUrl(project.images[1])} 
                   alt={`${project.title} doc 02`} 
                   className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s] hover:scale-[1.015]"
                 />
@@ -255,7 +291,7 @@ export default function ProjectDetails() {
               <>
                 <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                   <img 
-                    src={project.images[2]} 
+                    src={resolveImageUrl(project.images[2])} 
                     alt={`${project.title} doc 03`} 
                     className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s] hover:scale-[1.01]"
                   />
@@ -293,7 +329,7 @@ export default function ProjectDetails() {
                   <div className="space-y-3">
                     <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                       <img 
-                        src={project.images[3]} 
+                        src={resolveImageUrl(project.images[3])} 
                         alt={`${project.title} doc 04`} 
                         className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s]"
                       />
@@ -305,7 +341,7 @@ export default function ProjectDetails() {
                   <div className="space-y-3">
                     <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                       <img 
-                        src={project.images[4]} 
+                        src={resolveImageUrl(project.images[4])} 
                         alt={`${project.title} doc 05`} 
                         className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s]"
                       />
@@ -325,7 +361,7 @@ export default function ProjectDetails() {
                   <div className="space-y-3">
                     <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                       <img 
-                        src={project.images[3]} 
+                        src={resolveImageUrl(project.images[3])} 
                         alt={`${project.title} doc 04`} 
                         className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s]"
                       />
@@ -350,7 +386,7 @@ export default function ProjectDetails() {
                   <div className="lg:col-span-8 space-y-3">
                     <div className="overflow-hidden bg-stone-100 dark:bg-[#151210] border border-stone-200/30 dark:border-stone-850/30 rounded-sm">
                       <img 
-                        src={displayImg} 
+                        src={resolveImageUrl(displayImg)} 
                         alt={`${project.title} details`} 
                         className="w-full h-auto object-cover filter grayscale-[0.05] hover:grayscale-0 transition-all duration-[0.8s] hover:scale-[1.01]"
                       />

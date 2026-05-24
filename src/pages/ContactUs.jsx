@@ -57,7 +57,7 @@ export default function ContactUs() {
     'w-full font-karla text-sm bg-white dark:bg-[#111110] border border-stone-200 dark:border-stone-800/50 text-[#222222] dark:text-[#e6e0d8] placeholder:text-stone-400 dark:placeholder:text-[#555] px-4 py-3 rounded-md outline-none focus:border-black dark:focus:border-white transition-colors';
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-white dark:bg-[#0c0a09] transition-colors duration-300">
+    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-white dark:bg-[#0c0a09] transition-colors duration-300 lg:pl-[300px]">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-16 pointer-events-auto">
 
         {/* Back Link */}

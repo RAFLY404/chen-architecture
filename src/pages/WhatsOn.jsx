@@ -1,10 +1,32 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { newsArticles } from '../data/news';
+import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 export default function WhatsOn() {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(getApiUrl('/news'))
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch news');
+        return res.json();
+      })
+      .then((data) => {
+        setArticles(data && data.length > 0 ? data : newsArticles);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching news, falling back to mock data:', err);
+        setArticles(newsArticles);
+        setLoading(false);
+      });
+  }, []);
+
   return (
-    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] transition-colors duration-300">
+    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] transition-colors duration-300 lg:pl-[300px]">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-40 pb-24 sm:pb-32 pointer-events-auto">
         
         {/* Back Link */}
@@ -36,14 +58,17 @@ export default function WhatsOn() {
 
         {/* News Grid (2 Columns on desktop/tablet, 1 Column on mobile, 3rem / 48px gap) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-stone-200/60 dark:border-stone-800/20 pt-12 md:pt-16">
-          {newsArticles.map((article, index) => (
-            <motion.article 
-              key={article.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
-              className="group flex flex-col hover:-translate-y-[2px] transition-transform duration-300"
-            >
+          {loading ? (
+            <div className="col-span-2 text-center py-10 font-mono text-xs uppercase tracking-widest text-[#666]">Loading...</div>
+          ) : (
+            articles.map((article, index) => (
+              <motion.article 
+                key={article.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+                className="group flex flex-col hover:-translate-y-[2px] transition-transform duration-300"
+              >
               {/* Aspect Ratio 3:1 Thumbnail with 4px border radius */}
               <Link 
                 to={`/what's on/${article.id}`} 
@@ -60,7 +85,7 @@ export default function WhatsOn() {
                 />
                 
                 <img 
-                  src={article.heroImage} 
+                  src={resolveImageUrl(article.heroImage)} 
                   alt={article.title}
                   className="w-full h-full object-cover filter grayscale-[0.05] group-hover:grayscale-0 transition-transform duration-[1.2s] ease-[0.16, 1, 0.3, 1] group-hover:scale-105"
                   loading="lazy"
@@ -96,7 +121,7 @@ export default function WhatsOn() {
                 </Link>
               </div>
             </motion.article>
-          ))}
+          )))}
         </div>
 
       </div>

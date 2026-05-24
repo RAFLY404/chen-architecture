@@ -1,10 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { newsArticles } from '../data/news';
+import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 export default function WhatsOnDetails() {
   const { id } = useParams();
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Scroll to top when article changes
   useEffect(() => {
@@ -14,9 +17,35 @@ export default function WhatsOnDetails() {
     }
   }, [id]);
 
+  useEffect(() => {
+    setLoading(true);
+    fetch(getApiUrl('/news'))
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch news');
+        return res.json();
+      })
+      .then((data) => {
+        setArticles(data && data.length > 0 ? data : newsArticles);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching news, falling back to mock data:', err);
+        setArticles(newsArticles);
+        setLoading(false);
+      });
+  }, []);
+
   // Find current article
-  const currentIndex = newsArticles.findIndex((art) => art.id === id);
-  const article = newsArticles[currentIndex];
+  const currentIndex = articles.findIndex((art) => art.id === id);
+  const article = articles[currentIndex];
+
+  if (loading) {
+    return (
+      <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-[#fbfbfa] dark:bg-[#0c0a09] z-40 text-stone-900 dark:text-[#e6e0d8]">
+        <div className="font-mono text-xs uppercase tracking-widest text-[#666]">Loading...</div>
+      </div>
+    );
+  }
 
   if (!article) {
     return (
@@ -30,13 +59,13 @@ export default function WhatsOnDetails() {
   }
 
   // Find next/prev articles
-  const prevArticle = currentIndex > 0 ? newsArticles[currentIndex - 1] : null;
-  const nextArticle = currentIndex < newsArticles.length - 1 ? newsArticles[currentIndex + 1] : null;
+  const prevArticle = currentIndex > 0 ? articles[currentIndex - 1] : null;
+  const nextArticle = currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
 
   return (
     <div 
       id="details-page-container"
-      className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] selection:bg-stone-900/10 dark:selection:bg-white/10 flex flex-col transition-colors duration-300"
+      className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] selection:bg-stone-900/10 dark:selection:bg-white/10 flex flex-col transition-colors duration-300 lg:pl-[300px]"
     >
       {/* MAIN CONTENT AREA */}
       <main className="w-full flex-grow font-karla">
@@ -94,7 +123,7 @@ export default function WhatsOnDetails() {
               }} 
             />
             <img 
-              src={article.heroImage} 
+              src={resolveImageUrl(article.heroImage)} 
               alt={article.title}
               className="w-full h-full object-cover filter grayscale-[0.05]"
             />
@@ -107,7 +136,7 @@ export default function WhatsOnDetails() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="prose prose-stone dark:prose-invert max-w-none mb-16"
           >
-            {article.paragraphs.map((paragraph, index) => (
+            {article.paragraphs && article.paragraphs.map((paragraph, index) => (
               <p 
                 key={index} 
                 className="font-karla text-[1rem] sm:text-[1.05rem] text-[#333333] dark:text-[#c7c2bb] leading-[1.75] mb-6 tracking-wide"

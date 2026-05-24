@@ -1,6 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Footer() {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
+  if (!isHome) return null;
+
   return (
     <>
       {/* Footer nav — hidden on mobile (nav is in Header hamburger) */}

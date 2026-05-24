@@ -1,18 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { projects } from '../data/projects';
+import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 export default function Project() {
+  const [projectsList, setProjectsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedTypology, setSelectedTypology] = useState('ALL');
 
+  useEffect(() => {
+    fetch(getApiUrl('/projects'))
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch projects');
+        return res.json();
+      })
+      .then((data) => {
+        setProjectsList(data && data.length > 0 ? data : projects);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching projects, falling back to mock data:', err);
+        setProjectsList(projects);
+        setLoading(false);
+      });
+  }, []);
+
   // Extract unique typologies
-  const typologies = ['ALL', ...new Set(projects.map((p) => p.typology))];
+  const typologies = ['ALL', ...new Set(projectsList.map((p) => p.typology).filter(Boolean))];
 
   // Filter projects
   const filteredProjects = selectedTypology === 'ALL'
-    ? projects
-    : projects.filter((p) => p.typology === selectedTypology);
+    ? projectsList
+    : projectsList.filter((p) => p.typology === selectedTypology);
 
   // Define beautiful aspect ratios to ensure a staggered masonry effect
   const getAspectRatioClass = (id) => {
@@ -34,8 +54,9 @@ export default function Project() {
     }
   };
 
+
   return (
-    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09]">
+    <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] lg:pl-[300px] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-40 pb-24 sm:pb-20 pointer-events-auto">
         
         {/* Back Link */}
@@ -128,7 +149,7 @@ export default function Project() {
                     />
 
                     <img 
-                      src={project.heroImage} 
+                      src={resolveImageUrl(project.heroImage)} 
                       alt={project.title} 
                       className="w-full h-full object-cover transition-transform duration-[1.2s] ease-[0.16, 1, 0.3, 1] group-hover:scale-[1.025] filter grayscale-[0.15] group-hover:grayscale-0"
                       loading="lazy"

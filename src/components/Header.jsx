@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useTheme } from '../ThemeContext';
 
@@ -8,12 +8,14 @@ const NAV_ITEMS = ["Project", "What's On", "About Us", "Contact Us"];
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   return (
     <>
       <header className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 sm:px-10 py-6 sm:py-8 z-[70] pointer-events-auto">
         {/* Logo */}
-        <a href="/" className="hover:opacity-70 transition-opacity block">
+        <a href="/" className={`hover:opacity-70 transition-opacity block ${isHome ? '' : 'lg:hidden'}`}>
           <img
             src={logo}
             alt="ACEN Architecture"
@@ -45,18 +47,20 @@ export default function Header() {
           </button>
         </div>
 
-        <div className="hidden lg:flex items-center">
-          <button 
-            onClick={toggleTheme}
-            className="group w-8 h-8 flex items-center justify-center rounded-full border border-black dark:border-white text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors duration-300"
-            aria-label="Toggle theme"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 transition-transform duration-500 group-hover:rotate-180">
-              <circle cx="12" cy="12" r="10" className="stroke-current fill-none" strokeWidth="2" />
-              <path d="M12 2a10 10 0 0 1 0 20z" className="fill-current" />
-            </svg>
-          </button>
-        </div>
+        {isHome && (
+          <div className="hidden lg:flex items-center">
+            <button 
+              onClick={toggleTheme}
+              className="group w-8 h-8 flex items-center justify-center rounded-full border border-black dark:border-white text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors duration-300"
+              aria-label="Toggle theme"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-4 h-4 transition-transform duration-500 group-hover:rotate-180">
+                <circle cx="12" cy="12" r="10" className="stroke-current fill-none" strokeWidth="2" />
+                <path d="M12 2a10 10 0 0 1 0 20z" className="fill-current" />
+              </svg>
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Mobile & Tablet slide-down menu */}
