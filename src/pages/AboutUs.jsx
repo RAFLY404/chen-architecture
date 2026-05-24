@@ -21,6 +21,38 @@ const PUBLICATIONS = [
   'Designverse', 'Indesignlive', 'Tecture Mag',
 ];
 
+// Team members
+const TEAM_MEMBERS = [
+  {
+    name: 'Rafly Acen',
+    role: 'Principal Architect',
+    bio: 'Leads the design direction of ACEN, focusing on tropical spatial narratives and material honesty.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+    instagram: '#',
+  },
+  {
+    name: 'Alana Putri',
+    role: 'Design Director',
+    bio: 'Drives the conceptual framework across all projects, bridging culture and contemporary architectural practice.',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop',
+    instagram: '#',
+  },
+  {
+    name: 'Bima Candra',
+    role: 'Senior Architect',
+    bio: 'Specializes in structural integration and sustainable material research within the tropical context.',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop',
+    instagram: '#',
+  },
+  {
+    name: 'Nadia Reza',
+    role: 'Urban Researcher',
+    bio: 'Investigates the intersection of urbanism, public space, and community participation in Southeast Asian cities.',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop',
+    instagram: '#',
+  },
+];
+
 export default function AboutUs() {
   const { theme } = useTheme();
 
@@ -98,6 +130,69 @@ export default function AboutUs() {
                   {name}
                 </span>
               </div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* ───── SECTION 1.5: Team Members ───── */}
+        <motion.section {...fadeUp} className="mb-16 md:mb-24">
+          <h4 className="font-karla text-sm tracking-[0.15em] text-center text-black dark:text-[#e6e0d8] mb-2">
+            The Team
+          </h4>
+          <p className="font-karla text-xs tracking-[0.08em] text-center text-[#999999] dark:text-[#6b6661] mb-10 md:mb-14">
+            The minds behind the practice
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            {TEAM_MEMBERS.map((member, index) => (
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+                className="group flex flex-col"
+              >
+                {/* Portrait */}
+                <div className="relative w-full aspect-[3/4] overflow-hidden rounded-sm bg-stone-100 dark:bg-[#151210] mb-4">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover object-top filter grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.03]"
+                  />
+                  {/* Subtle dark gradient at bottom */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  {/* Instagram link overlay on hover */}
+                  <a
+                    href={member.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-3 right-3 w-7 h-7 rounded-full bg-white/90 dark:bg-stone-900/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white shadow-sm"
+                    aria-label={`${member.name} Instagram`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-3.5 h-3.5 text-stone-800 dark:text-stone-200 fill-none stroke-current" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <circle cx="12" cy="12" r="4" />
+                      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+                    </svg>
+                  </a>
+                </div>
+
+                {/* Role tag */}
+                <span className="font-karla text-[9px] tracking-[0.18em] uppercase text-[#999999] dark:text-[#6b6661] mb-1">
+                  {member.role}
+                </span>
+
+                {/* Name */}
+                <h3 className="font-karla text-sm tracking-tight text-stone-900 dark:text-[#e6e0d8] mb-2 leading-tight">
+                  {member.name}
+                </h3>
+
+                {/* Bio */}
+                <p className="font-karla text-[11px] leading-[1.7] text-[#666666] dark:text-[#8a8580]">
+                  {member.bio}
+                </p>
+              </motion.div>
             ))}
           </div>
         </motion.section>
