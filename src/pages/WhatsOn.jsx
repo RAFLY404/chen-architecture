@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { newsArticles } from '../data/news';
+
+// Note: Link is used inside the article cards below
 import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 export default function WhatsOn() {
@@ -27,15 +29,7 @@ export default function WhatsOn() {
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] transition-colors duration-300 lg:pl-[300px]">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-40 pb-24 sm:pb-32 pointer-events-auto">
-        
-        {/* Back Link */}
-        <Link 
-          to="/" 
-          className="inline-block mb-10 font-karla text-xs tracking-[0.2em] text-[#666666] dark:text-[#8a8580] hover:text-black dark:hover:text-white uppercase transition-colors"
-        >
-          ← Back to Board
-        </Link>
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-24 sm:pb-32 pointer-events-auto">
 
         {/* Title Section */}
         <motion.div
@@ -44,16 +38,9 @@ export default function WhatsOn() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-16 md:mb-20"
         >
-          <span className="font-karla text-xs tracking-[0.3em] uppercase text-stone-400 dark:text-[#6b6661] block mb-3">
-            JOURNAL / ARCHIVE
-          </span>
-          <h1 className="font-karla text-4xl sm:text-5xl md:text-6xl text-stone-900 dark:text-[#e6e0d8] leading-none uppercase tracking-wide">
-            WHAT'S ON
+          <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
+            what's on
           </h1>
-          <div className="h-px w-20 bg-stone-900 dark:bg-[#e6e0d8] mt-6 mb-8" />
-          <p className="font-karla text-[#666666] dark:text-[#a8a4a0] text-base sm:text-lg leading-relaxed max-w-2xl">
-            Recent activities, exhibitions, awards, and lecture series from our creative collaborative practice.
-          </p>
         </motion.div>
 
         {/* News Grid (2 Columns on desktop/tablet, 1 Column on mobile, 3rem / 48px gap) */}

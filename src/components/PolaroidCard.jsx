@@ -57,7 +57,7 @@ export default function PolaroidCard({ label, gradient, imageUrl, delay, top, le
         <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-screen" style={{ backgroundImage: "url('/arch_sketch.png')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
         {/* Pin in top corner */}
-        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-rose-400 shadow-[0_0_8px_rgba(251,113,133,0.6)] z-10" />
+        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(251,113,133,0.6)] z-10" />
         
         {/* Image / Gradient area */}
         <div 

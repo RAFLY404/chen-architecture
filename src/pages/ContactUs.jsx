@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 
 export default function ContactUs() {
   const [form, setForm] = useState({
@@ -60,13 +59,6 @@ export default function ContactUs() {
     <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-white dark:bg-[#0c0a09] transition-colors duration-300 lg:pl-[300px]">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-16 pointer-events-auto">
 
-        {/* Back Link */}
-        <Link
-          to="/"
-          className="inline-block mb-10 font-karla text-xs tracking-[0.2em] text-[#666666] dark:text-[#8a8580] hover:text-black dark:hover:text-white uppercase transition-colors"
-        >
-          ← Back to Home
-        </Link>
 
         {/* ───── Page Title ───── */}
         <motion.h1

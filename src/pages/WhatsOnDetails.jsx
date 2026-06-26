@@ -18,7 +18,6 @@ export default function WhatsOnDetails() {
   }, [id]);
 
   useEffect(() => {
-    setLoading(true);
     fetch(getApiUrl('/news'))
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch news');

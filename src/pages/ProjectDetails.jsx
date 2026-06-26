@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
@@ -9,23 +9,7 @@ export default function ProjectDetails() {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(getApiUrl('/projects'))
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch projects');
-        return res.json();
-      })
-      .then((data) => {
-        const list = data && data.length > 0 ? data : projects;
-        resolveProjectFromList(list);
-      })
-      .catch((err) => {
-        console.error('Error fetching projects, falling back to mock:', err);
-        resolveProjectFromList(projects);
-      });
-  }, [id]);
-
-  const resolveProjectFromList = (list) => {
+  const resolveProjectFromList = useCallback((list) => {
     if (!id) {
       setProject(null);
       setLoading(false);
@@ -59,7 +43,23 @@ export default function ProjectDetails() {
 
     setProject(found);
     setLoading(false);
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetch(getApiUrl('/projects'))
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch projects');
+        return res.json();
+      })
+      .then((data) => {
+        const list = data && data.length > 0 ? data : projects;
+        resolveProjectFromList(list);
+      })
+      .catch((err) => {
+        console.error('Error fetching projects, falling back to mock:', err);
+        resolveProjectFromList(projects);
+      });
+  }, [resolveProjectFromList]);
 
   if (loading) {
     return (

@@ -6,7 +6,6 @@ import { getApiUrl, resolveImageUrl } from '../utils/api';
 
 export default function Project() {
   const [projectsList, setProjectsList] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedTypology, setSelectedTypology] = useState('ALL');
 
   useEffect(() => {
@@ -17,12 +16,10 @@ export default function Project() {
       })
       .then((data) => {
         setProjectsList(data && data.length > 0 ? data : projects);
-        setLoading(false);
       })
       .catch((err) => {
         console.error('Error fetching projects, falling back to mock data:', err);
         setProjectsList(projects);
-        setLoading(false);
       });
   }, []);
 
@@ -57,15 +54,7 @@ export default function Project() {
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] lg:pl-[300px] transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-28 sm:pt-40 pb-24 sm:pb-20 pointer-events-auto">
-        
-        {/* Back Link */}
-        <Link 
-          to="/" 
-          className="inline-block mb-10 font-karla text-xs tracking-[0.2em] text-stone-500 dark:text-[#8a8580] hover:text-stone-900 dark:hover:text-[#e6e0d8] uppercase transition-colors"
-        >
-          ← Back to Board
-        </Link>
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-24 sm:pb-20 pointer-events-auto">
 
         {/* Title Section */}
         <motion.div
@@ -74,16 +63,9 @@ export default function Project() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-12 sm:mb-16"
         >
-          <span className="font-karla text-xs tracking-[0.3em] uppercase text-stone-400 dark:text-[#6b6661] block mb-3">
-            ARCHIVE / PORTFOLIO
-          </span>
-          <h1 className="font-karla text-5xl sm:text-6xl md:text-8xl text-stone-900 dark:text-[#e6e0d8] leading-none uppercase tracking-wide">
-            PROJECTS
+          <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
+            project
           </h1>
-          <div className="h-px w-20 bg-stone-900 dark:bg-[#e6e0d8] mt-6 mb-8" />
-          <p className="font-karla text-stone-600 dark:text-[#a8a4a0] text-base sm:text-lg md:text-xl leading-relaxed max-w-xl">
-            A comprehensive catalog of architectural structures, volumetric studies, and spatial concepts exploring tropical climate design and material truth.
-          </p>
         </motion.div>
 
         {/* Filter Controls */}
