@@ -42,7 +42,7 @@ export default function Sidebar({ activePage }) {
       {/* Sidebar Footer */}
       <div className="space-y-6">
         <div className="flex items-center justify-between border-t border-stone-200/50 dark:border-stone-850/50 pt-4">
-          <span className="font-karla text-[10px] tracking-widest text-stone-400 dark:text-[#6b6661] uppercase">THEME</span>
+          <span className="font-karla text-[11px] tracking-[0.25em] uppercase transition-colors font-semibold text-stone-400 dark:text-[#6b6661]">THEME</span>
           <button 
             onClick={toggleTheme}
             className="group w-8 h-8 flex items-center justify-center rounded-full border border-black dark:border-white text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors duration-300"
@@ -54,8 +54,8 @@ export default function Sidebar({ activePage }) {
             </svg>
           </button>
         </div>
-        <div className="font-karla text-[10px] tracking-widest text-stone-400 dark:text-[#6b6661] uppercase">
-          Explore in: <span className="text-stone-800 dark:text-[#c8c4c0] font-semibold">English</span> 
+        <div className="font-karla text-[11px] tracking-[0.25em] uppercase transition-colors font-semibold text-stone-400 dark:text-[#6b6661]">
+          Explore in: <span className="text-stone-900 dark:text-[#e6e0d8]">English</span> 
         </div>
       </div>
     </aside>
