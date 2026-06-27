@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useTheme } from '../ThemeContext';
-
-const NAV_ITEMS = ["Project", "What's On", "About Us", "Contact Us"];
+import { useSiteSettings } from '../hooks/useSiteSettings';
+import { normalizeNavItems } from '../utils/api';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { settings } = useSiteSettings();
+  const navItems = normalizeNavItems(settings.navLabels);
   const location = useLocation();
   const isHome = location.pathname === '/';
 
@@ -70,14 +72,14 @@ export default function Header() {
         }`}
       >
         <nav className="flex flex-col items-center space-y-8">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <Link
-              key={item}
-              to={`/${item.toLowerCase()}`}
+              key={item.path}
+              to={item.path}
               onClick={() => setMenuOpen(false)}
               className="font-karla text-2xl tracking-[0.3em] uppercase text-black dark:text-[#e6e0d8] hover:opacity-60 transition-opacity"
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </nav>

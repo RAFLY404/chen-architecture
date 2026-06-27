@@ -37,28 +37,47 @@ export default function ProjectDetails() {
       });
     }
 
-    if (!found && list.length > 0) {
-      found = list[0];
-    }
-
     setProject(found);
     setLoading(false);
   }, [id]);
 
   useEffect(() => {
-    fetch(getApiUrl('/projects'))
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch projects');
-        return res.json();
-      })
-      .then((data) => {
-        const list = data && data.length > 0 ? data : projects;
-        resolveProjectFromList(list);
-      })
-      .catch((err) => {
-        console.error('Error fetching projects, falling back to mock:', err);
-        resolveProjectFromList(projects);
-      });
+    let active = true;
+
+    const loadProject = async () => {
+      if (!id) {
+        setProject(null);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const direct = await fetch(getApiUrl(`/projects/${id}`));
+        if (direct.ok) {
+          const data = await direct.json();
+          if (active) {
+            setProject(data);
+            setLoading(false);
+          }
+          return;
+        }
+
+        const response = await fetch(getApiUrl('/projects'));
+        if (!response.ok) throw new Error('Failed to fetch projects');
+        const data = await response.json();
+        if (active) resolveProjectFromList(data && data.length > 0 ? data : projects);
+      } catch (err) {
+        console.error('Error fetching project, falling back to mock:', err);
+        if (active) resolveProjectFromList(projects);
+      }
+    };
+
+    loadProject();
+
+    return () => {
+      active = false;
+    };
   }, [resolveProjectFromList]);
 
   if (loading) {
@@ -80,6 +99,7 @@ export default function ProjectDetails() {
 
   // Gallery captions generator for context-rich details
   const getCaptionForImage = (projId, index) => {
+    const legacyId = project.title?.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const captions = {
       'chicken-hero-pavilion': [
         'Exterior view of the porous timber canopy nestled inside Urban Forest Jakarta.',
@@ -110,12 +130,13 @@ export default function ProjectDetails() {
         'Pocket garden courtyard introducing natural light deep into the workspaces.'
       ]
     };
-    return captions[projId]?.[index] || `Project observation documentation slide ${index + 1}.`;
+    return captions[projId]?.[index] || captions[legacyId]?.[index] || `Project observation documentation slide ${index + 1}.`;
   };
 
   // Maps the project ID to its corresponding public drawing asset
-  const getDiagramForProject = (projId) => {
-    switch (projId) {
+  const getDiagramForProject = (project) => {
+    const legacyId = project.title?.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    switch (project.id || legacyId) {
       case 'chicken-hero-pavilion':
         return '/chicken_diagram.png';
       case 'obs-001-concrete':
@@ -123,7 +144,16 @@ export default function ProjectDetails() {
       case 'obs-002-glass':
         return '/glass_diagram.png';
       default:
-        return '/structure_diagram.png';
+        switch (legacyId) {
+          case 'chicken-hero-pavilion':
+            return '/chicken_diagram.png';
+          case 'obs-001-concrete':
+            return '/concrete_diagram.png';
+          case 'obs-002-glass':
+            return '/glass_diagram.png';
+          default:
+            return '/structure_diagram.png';
+        }
     }
   };
 
@@ -167,7 +197,7 @@ export default function ProjectDetails() {
           <div className="pt-2 border-t border-stone-200/30 dark:border-stone-800/30">
             <span className="text-stone-400 block mb-1.5">MATERIAL SPECIFICATION:</span>
             <ul className="space-y-1 pl-3 list-disc list-outside normal-case text-[8.5px] text-stone-600 dark:text-[#a8a4a0]">
-              {project.materials.map(m => (
+              {(project.materials || []).map(m => (
                 <li key={m}>{m}</li>
               ))}
             </ul>
@@ -221,7 +251,7 @@ export default function ProjectDetails() {
             </div>
             <div className="h-px w-8 bg-stone-900 dark:bg-[#e6e0d8] my-2" />
             <p className="text-[10px] leading-[1.65] text-stone-700 dark:text-[#c8c4c0] text-justify">
-              {project.paragraphs[0]}
+            {project.paragraphs?.[0] || project.excerpt || 'Project narrative is being prepared.'}
             </p>
           </div>
         </motion.section>
@@ -229,12 +259,12 @@ export default function ProjectDetails() {
         {/* ROW 2: Diagram & Secondary Paragraph (Asymmetric 33% / 67% Split) */}
         <motion.section {...animProps(0.15)} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16 lg:mb-24">
           <div className="lg:col-span-4 space-y-4">
-            {project.paragraphs[1] && (
+            {project.paragraphs?.[1] && (
               <p className="text-[10px] leading-[1.65] text-stone-750 dark:text-[#c8c4c0] text-justify">
                 {project.paragraphs[1]}
               </p>
             )}
-            {project.paragraphs[2] && (
+            {project.paragraphs?.[2] && (
               <p className="text-[10px] leading-[1.65] text-stone-750 dark:text-[#c8c4c0] text-justify">
                 {project.paragraphs[2]}
               </p>
@@ -243,7 +273,7 @@ export default function ProjectDetails() {
           <div className="lg:col-span-8 space-y-3">
             <div className="overflow-hidden bg-stone-50 dark:bg-[#110f0e] border border-stone-200/30 dark:border-stone-850/30 rounded-sm p-4 md:p-8 flex items-center justify-center">
               <img 
-                src={resolveImageUrl(getDiagramForProject(project.id))} 
+                src={resolveImageUrl(project.diagramImage || getDiagramForProject(project))} 
                 alt={`${project.title} Structural Diagram`} 
                 className="w-full h-auto max-h-[60vh] object-contain filter dark:brightness-100 transition-all duration-[1s] hover:scale-[1.01]"
               />
@@ -305,12 +335,12 @@ export default function ProjectDetails() {
             )}
           </div>
           <div className="lg:col-span-4 space-y-4 lg:pt-6">
-            {project.paragraphs[3] && (
+            {project.paragraphs?.[3] && (
               <p className="text-[10px] leading-[1.65] text-stone-750 dark:text-[#c8c4c0] text-justify">
                 {project.paragraphs[3]}
               </p>
             )}
-            {project.paragraphs[4] && (
+            {project.paragraphs?.[4] && (
               <p className="text-[10px] leading-[1.65] text-stone-750 dark:text-[#c8c4c0] text-justify">
                 {project.paragraphs[4]}
               </p>

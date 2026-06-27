@@ -1,30 +1,43 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { getApiUrl } from '../utils/api';
+import { useSiteSettings } from '../hooks/useSiteSettings';
+
+const initialForm = {
+  title: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  postCode: '',
+  company: '',
+  location: '',
+  helpType: '',
+  subject: '',
+  message: '',
+};
 
 export default function ContactUs() {
-  const [form, setForm] = useState({
-    title: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    postCode: '',
-    company: '',
-    location: '',
-    helpType: '',
-    subject: '',
-    message: '',
-  });
+  const { settings } = useSiteSettings();
+  const [form, setForm] = useState(initialForm);
   const [files, setFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
+  const [submitState, setSubmitState] = useState({ status: 'idle', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
+
+  const titleOptions = settings.formTitleOptions?.length ? settings.formTitleOptions : ['Mr.', 'Mrs.', 'Ms.'];
+  const helpTypeOptions = settings.formHelpTypeOptions?.length
+    ? settings.formHelpTypeOptions
+    : ['Project Inquiry', 'Collaboration', 'Press', 'Other'];
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (submitState.status !== 'idle') setSubmitState({ status: 'idle', message: '' });
   };
 
   const handleFiles = (incoming) => {
-    const newFiles = [...files, ...Array.from(incoming)].slice(0, 5);
+    const newFiles = [...files, ...Array.from(incoming || [])].slice(0, 5);
     setFiles(newFiles);
   };
 
@@ -38,10 +51,44 @@ export default function ContactUs() {
     setFiles(files.filter((_, i) => i !== idx));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // placeholder — wire up to backend later
-    alert('Thank you! Your message has been submitted.');
+    setIsSubmitting(true);
+    setSubmitState({ status: 'idle', message: '' });
+
+    const supportNote = files.length
+      ? `\n\nSupporting documents selected: ${files.map((file) => file.name).join(', ')}`
+      : '';
+
+    try {
+      const response = await fetch(getApiUrl('/contact'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          message: `${form.message}${supportNote}`,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.error || 'Unable to submit your message right now.');
+      }
+
+      setForm(initialForm);
+      setFiles([]);
+      setSubmitState({
+        status: 'success',
+        message: payload.message || 'Thank you! Your message has been submitted.',
+      });
+    } catch (error) {
+      setSubmitState({
+        status: 'error',
+        message: error.message || 'Unable to submit your message right now.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const fadeUp = {
@@ -51,82 +98,80 @@ export default function ContactUs() {
     transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
   };
 
-  // Shared input styles
   const inputBase =
     'w-full font-karla text-sm bg-white dark:bg-[#111110] border border-stone-200 dark:border-stone-800/50 text-[#222222] dark:text-[#e6e0d8] placeholder:text-stone-400 dark:placeholder:text-[#555] px-4 py-3 rounded-md outline-none focus:border-black dark:focus:border-white transition-colors';
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-white dark:bg-[#0c0a09] transition-colors duration-300 lg:pl-[300px]">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-16 pointer-events-auto">
-
-
-        {/* ───── Page Title ───── */}
         <motion.h1
           {...fadeUp}
-          className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-12 sm:mb-16"
+          className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-8 sm:mb-10"
         >
-          contact us
+          {settings.contactSectionTitle || 'contact us'}
         </motion.h1>
 
-        {/* ───── Contact Info Columns ───── */}
+        {settings.contactHeroText && (
+          <motion.p
+            {...fadeUp}
+            className="max-w-2xl font-karla text-sm sm:text-base leading-[1.8] text-[#555555] dark:text-[#a8a4a0] mb-12 sm:mb-16"
+          >
+            {settings.contactHeroText}
+          </motion.p>
+        )}
+
         <motion.section {...fadeUp} className="mb-14 md:mb-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-0">
-            {/* Column 1 */}
             <div className="flex flex-col gap-2 md:pr-12">
               <span className="font-karla text-xs tracking-[0.12em] text-[#999999] dark:text-[#6b6661]">
                 Project Inquiries :
               </span>
               <a
-                href="mailto:visionary@acen.archi"
+                href={`mailto:${settings.emailInquiry}`}
                 className="font-karla text-sm tracking-[0.04em] text-[#222222] dark:text-[#e6e0d8] hover:text-[#666] dark:hover:text-white transition-colors underline underline-offset-4 decoration-stone-300 dark:decoration-stone-700"
               >
-                visionary@acen.archi
+                {settings.emailInquiry}
               </a>
               <div className="mt-3 flex items-center gap-2">
                 <span className="font-karla text-xs tracking-[0.12em] text-[#999999] dark:text-[#6b6661]">
                   Instagram:
                 </span>
                 <a
-                  href="https://www.instagram.com/acenarchitects/"
+                  href={settings.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-karla text-sm tracking-[0.04em] text-[#222222] dark:text-[#e6e0d8] hover:text-[#666] dark:hover:text-white transition-colors"
                 >
-                  @acenarchitects
+                  {settings.instagramHandle}
                 </a>
               </div>
             </div>
 
-            {/* Column 2 */}
             <div className="flex flex-col gap-2 md:pl-12 md:border-l md:border-stone-200/60 md:dark:border-stone-800/30">
               <span className="font-karla text-xs tracking-[0.12em] text-[#999999] dark:text-[#6b6661]">
                 General & Career :
               </span>
               <a
-                href="mailto:studio@acen.archi"
+                href={`mailto:${settings.emailGeneral}`}
                 className="font-karla text-sm tracking-[0.04em] text-[#222222] dark:text-[#e6e0d8] hover:text-[#666] dark:hover:text-white transition-colors underline underline-offset-4 decoration-stone-300 dark:decoration-stone-700"
               >
-                studio@acen.archi
+                {settings.emailGeneral}
               </a>
               <div className="mt-3 flex items-center gap-2">
                 <span className="font-karla text-xs tracking-[0.12em] text-[#999999] dark:text-[#6b6661]">
                   Phone:
                 </span>
                 <span className="font-karla text-sm tracking-[0.04em] text-[#222222] dark:text-[#e6e0d8]">
-                  +62 21 1234 5678
+                  {settings.phone}
                 </span>
               </div>
             </div>
           </div>
         </motion.section>
 
-        {/* ───── Divider ───── */}
         <div className="w-full h-px bg-stone-200/80 dark:bg-stone-800/40 mb-14 md:mb-20" />
 
-        {/* ───── Contact Form ───── */}
         <motion.form {...fadeUp} onSubmit={handleSubmit} className="space-y-6">
-
-          {/* Row 1: Title / First Name / Last Name */}
           <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr_1fr] gap-4">
             <div>
               <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
@@ -139,10 +184,10 @@ export default function ContactUs() {
                 onChange={handleChange}
                 className={inputBase + ' appearance-none cursor-pointer'}
               >
-                <option value="">—</option>
-                <option value="Mr.">Mr.</option>
-                <option value="Mrs.">Mrs.</option>
-                <option value="Ms.">Ms.</option>
+                <option value="">-</option>
+                {titleOptions.map((option) => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
               </select>
             </div>
             <div>
@@ -172,7 +217,6 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* Row 2: Email / Phone / Post Code */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
@@ -215,7 +259,6 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* Row 3: Company / Location */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
@@ -243,7 +286,6 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* Row 4: What can we help you? */}
           <div>
             <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
               What can we help you?
@@ -254,15 +296,13 @@ export default function ContactUs() {
               onChange={handleChange}
               className={inputBase + ' appearance-none cursor-pointer'}
             >
-              <option value="">Select…</option>
-              <option value="Project Inquiry">Project Inquiry</option>
-              <option value="Collaboration">Collaboration</option>
-              <option value="Press">Press</option>
-              <option value="Other">Other</option>
+              <option value="">Select...</option>
+              {helpTypeOptions.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
             </select>
           </div>
 
-          {/* Row 5: Subject */}
           <div>
             <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
               Subject <span className="text-red-500 text-[10px]">(required)</span>
@@ -277,7 +317,6 @@ export default function ContactUs() {
             />
           </div>
 
-          {/* Row 6: Message */}
           <div>
             <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
               Message <span className="text-red-500 text-[10px]">(required)</span>
@@ -292,7 +331,6 @@ export default function ContactUs() {
             />
           </div>
 
-          {/* Row 7: File Upload */}
           <div>
             <label className="font-karla text-xs tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0] mb-1.5 block">
               Upload supporting documents (site photos, plot, etc)
@@ -326,23 +364,22 @@ export default function ContactUs() {
               </span>
             </div>
 
-            {/* File list */}
             {files.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
-                {files.map((f, i) => (
+                {files.map((file, index) => (
                   <div
-                    key={i}
+                    key={`${file.name}-${index}`}
                     className="flex items-center gap-2 bg-stone-100 dark:bg-[#151210] border border-stone-200 dark:border-stone-800/50 rounded px-3 py-1.5"
                   >
                     <span className="font-karla text-xs text-[#222] dark:text-[#c8c4c0] truncate max-w-[160px]">
-                      {f.name}
+                      {file.name}
                     </span>
                     <button
                       type="button"
-                      onClick={(e) => { e.stopPropagation(); removeFile(i); }}
+                      onClick={(e) => { e.stopPropagation(); removeFile(index); }}
                       className="text-stone-400 hover:text-red-500 transition-colors text-sm leading-none"
                     >
-                      ×
+                      x
                     </button>
                   </div>
                 ))}
@@ -350,16 +387,27 @@ export default function ContactUs() {
             )}
           </div>
 
-          {/* Row 8: Submit */}
+          {submitState.message && (
+            <div
+              className={`font-karla text-sm rounded-md border px-4 py-3 ${
+                submitState.status === 'success'
+                  ? 'border-green-200 bg-green-50 text-green-700 dark:border-green-900/50 dark:bg-green-950/20 dark:text-green-300'
+                  : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300'
+              }`}
+            >
+              {submitState.message}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full font-karla text-sm tracking-[0.15em] uppercase py-4 rounded-md bg-black dark:bg-white text-white dark:text-black hover:bg-[#222] dark:hover:bg-stone-200 transition-colors duration-300"
+            disabled={isSubmitting}
+            className="w-full font-karla text-sm tracking-[0.15em] uppercase py-4 rounded-md bg-black dark:bg-white text-white dark:text-black hover:bg-[#222] dark:hover:bg-stone-200 transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Submit
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
         </motion.form>
 
-        {/* Bottom spacer */}
         <div className="h-16" />
       </div>
     </div>

@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { useTheme } from '../ThemeContext';
+import { useSiteSettings } from '../hooks/useSiteSettings';
+import { normalizeNavItems } from '../utils/api';
 
 export default function Sidebar({ activePage }) {
   const { theme, toggleTheme } = useTheme();
+  const { settings } = useSiteSettings();
+  const navItems = normalizeNavItems(settings.navLabels);
 
   return (
     <aside className="fixed top-0 left-0 bottom-0 w-[300px] bg-[#fbfbfa] dark:bg-[#0c0a09] border-r border-stone-200/30 dark:border-stone-800/40 px-8 py-10 flex flex-col justify-between hidden lg:flex z-50">
@@ -19,20 +23,21 @@ export default function Sidebar({ activePage }) {
 
         {/* Navigation Links */}
         <nav className="flex flex-col space-y-4">
-          {["Project", "What's On", "About Us", "Contact Us"].map((item) => {
-            const path = `/${item.toLowerCase()}`;
-            const isActive = item.toLowerCase() === activePage;
+          {navItems.map((item) => {
+            const cleanLabel = item.label.toLowerCase();
+            const cleanPath = item.path.slice(1).toLowerCase();
+            const isActive = cleanLabel === activePage || cleanPath === activePage;
             return (
               <Link
-                key={item}
-                to={path}
+                key={item.path}
+                to={item.path}
                 className={`font-karla text-[11px] tracking-[0.25em] uppercase transition-colors font-semibold ${
                   isActive 
                     ? 'text-stone-900 dark:text-[#e6e0d8]' 
                     : 'text-stone-400 hover:text-stone-900 dark:text-[#6b6661] dark:hover:text-[#e6e0d8]'
                 }`}
               >
-                {item}
+                {item.label}
               </Link>
             );
           })}
@@ -40,9 +45,9 @@ export default function Sidebar({ activePage }) {
       </div>
 
       {/* Sidebar Footer */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex items-center justify-between border-t border-stone-200/50 dark:border-stone-850/50 pt-4">
-          <span className="font-karla text-[11px] tracking-[0.25em] uppercase transition-colors font-semibold text-stone-400 dark:text-[#6b6661]">THEME</span>
+          <span className="font-karla text-[11px] tracking-[0.25em] transition-colors font-semibold text-stone-400 dark:text-[#6b6661]">THEME</span>
           <button 
             onClick={toggleTheme}
             className="group w-8 h-8 flex items-center justify-center rounded-full border border-black dark:border-white text-black dark:text-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors duration-300"
@@ -54,8 +59,8 @@ export default function Sidebar({ activePage }) {
             </svg>
           </button>
         </div>
-        <div className="font-karla text-[11px] tracking-[0.25em] uppercase transition-colors font-semibold text-stone-400 dark:text-[#6b6661]">
-          Explore in: <span className="text-stone-900 dark:text-[#e6e0d8]">English</span> 
+        <div className="font-karla text-[11px] tracking-[0.25em] transition-colors font-semibold text-stone-400 dark:text-[#6b6661]">
+          Explore in: <span className="text-stone-900 dark:text-[#e6e0d8]">English</span>
         </div>
       </div>
     </aside>

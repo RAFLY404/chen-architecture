@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { projects } from '../data/projects';
 import { getApiUrl, resolveImageUrl } from '../utils/api';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 export default function Project() {
+  const { settings } = useSiteSettings();
   const [projectsList, setProjectsList] = useState([]);
   const [selectedTypology, setSelectedTypology] = useState('ALL');
 
@@ -32,8 +34,9 @@ export default function Project() {
     : projectsList.filter((p) => p.typology === selectedTypology);
 
   // Define beautiful aspect ratios to ensure a staggered masonry effect
-  const getAspectRatioClass = (id) => {
-    switch (id) {
+  const getAspectRatioClass = (project, index) => {
+    const legacyId = (project.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    switch (project.id || legacyId) {
       case 'chicken-hero-pavilion':
         return 'aspect-[3/4]'; // Tall portrait
       case 'obs-001-concrete':
@@ -47,7 +50,7 @@ export default function Project() {
       case 'geometry-space':
         return 'aspect-[4/5]'; // Moderate portrait
       default:
-        return 'aspect-[4/5]';
+        return ['aspect-[3/4]', 'aspect-[16/10]', 'aspect-[4/5]', 'aspect-square', 'aspect-[3/2]'][index % 5];
     }
   };
 
@@ -64,7 +67,7 @@ export default function Project() {
           className="mb-12 sm:mb-16"
         >
           <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
-            project
+            {settings.projectsSectionTitle || 'project'}
           </h1>
         </motion.div>
 
@@ -118,7 +121,7 @@ export default function Project() {
                 <Link to={`/project/${project.id}`} className="block">
                   
                   {/* Image wrapper */}
-                  <div className={`w-full overflow-hidden bg-stone-100 dark:bg-[#151210] relative rounded-2xl border border-stone-200/20 dark:border-stone-800/10 ${getAspectRatioClass(project.id)}`}>
+                  <div className={`w-full overflow-hidden bg-stone-100 dark:bg-[#151210] relative rounded-2xl border border-stone-200/20 dark:border-stone-800/10 ${getAspectRatioClass(project, index)}`}>
                     
                     {/* Sketch pattern background for loading/visual flavor */}
                     <div 
@@ -149,7 +152,7 @@ export default function Project() {
                       {/* Bottom bar */}
                       <div className="flex justify-between items-center w-full">
                         <span className="font-karla text-[9px] tracking-wider text-white/95 uppercase bg-black/45 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10">
-                          {project.location.split(',')[0]}
+                          {(project.location || '').split(',')[0]}
                         </span>
                         <span className="w-6 h-6 rounded-full bg-white/95 dark:bg-stone-900/95 flex items-center justify-center text-stone-850 dark:text-[#e6e0d8] border border-white/20 shadow-xs font-karla text-xs">
                           ↗
@@ -187,4 +190,3 @@ export default function Project() {
     </div>
   );
 }
-

@@ -5,8 +5,10 @@ import { newsArticles } from '../data/news';
 
 // Note: Link is used inside the article cards below
 import { getApiUrl, resolveImageUrl } from '../utils/api';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 export default function WhatsOn() {
+  const { settings } = useSiteSettings();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +41,7 @@ export default function WhatsOn() {
           className="mb-16 md:mb-20"
         >
           <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
-            what's on
+            {settings.newsSectionTitle || "what's on"}
           </h1>
         </motion.div>
 

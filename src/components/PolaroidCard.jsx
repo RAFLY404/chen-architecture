@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useDrag } from '@use-gesture/react';
 import { useNavigate } from 'react-router-dom';
 
-export default function PolaroidCard({ label, gradient, imageUrl, delay, top, left, zIndexOffset, isLarge, isSmall, dragX, dragY, width }) {
+export default function PolaroidCard({ label, gradient, imageUrl, projectId, delay, top, left, zIndexOffset, isLarge, isSmall, dragX, dragY, width }) {
   const navigate = useNavigate();
   const [isZooming, setIsZooming] = useState(false);
   const localX = useMotionValue(0);
@@ -78,7 +78,7 @@ export default function PolaroidCard({ label, gradient, imageUrl, delay, top, le
               root.style.opacity = '0';
             }
 
-            const slug = label.replace(/\//g, '').trim().replace(/\s+/g, '-').toLowerCase();
+            const slug = projectId || label.replace(/\//g, '').trim().replace(/\s+/g, '-').toLowerCase();
             setTimeout(() => {
               navigate(`/project/${slug}`);
               if (root) {
