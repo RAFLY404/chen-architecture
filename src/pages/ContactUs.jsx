@@ -56,30 +56,30 @@ export default function ContactUs() {
     setIsSubmitting(true);
     setSubmitState({ status: 'idle', message: '' });
 
-    const supportNote = files.length
-      ? `\n\nSupporting documents selected: ${files.map((file) => file.name).join(', ')}`
-      : '';
-
     try {
-      const response = await fetch(getApiUrl('/contact'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          message: `${form.message}${supportNote}`,
-        }),
+      const payload = new FormData();
+      Object.entries(form).forEach(([key, value]) => {
+        payload.append(key, value);
+      });
+      files.forEach((file) => {
+        payload.append('attachments', file);
       });
 
-      const payload = await response.json().catch(() => ({}));
+      const response = await fetch(getApiUrl('/contact'), {
+        method: 'POST',
+        body: payload,
+      });
+
+      const result = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(payload.error || 'Unable to submit your message right now.');
+        throw new Error(result.error || 'Unable to submit your message right now.');
       }
 
       setForm(initialForm);
       setFiles([]);
       setSubmitState({
         status: 'success',
-        message: payload.message || 'Thank you! Your message has been submitted.',
+        message: result.message || 'Thank you! Your message has been submitted.',
       });
     } catch (error) {
       setSubmitState({
