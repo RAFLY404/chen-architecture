@@ -40,6 +40,12 @@ npm run build
 ```
 The output will be generated in the `dist/` directory, ready for deployment.
 
+For production hosting, configure every non-asset route to serve `index.html`.
+This is required because the app uses React Router with browser history, so
+refreshing routes like `/project/:id` must load the SPA entry file first.
+`public/_redirects` covers Netlify-style static hosting, and `vercel.json`
+covers Vercel rewrites.
+
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 19

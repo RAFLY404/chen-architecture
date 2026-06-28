@@ -350,6 +350,7 @@ export default function ContactUs() {
                 ref={fileInputRef}
                 type="file"
                 multiple
+                accept="image/jpeg,image/png,image/webp,image/avif,image/tiff,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 className="hidden"
                 onChange={(e) => handleFiles(e.target.files)}
               />
