@@ -3,6 +3,7 @@ import { fetchJson } from '../utils/api';
 
 const fallbackSettings = {
   studioName: 'ACEN',
+  logoUrl: null,
   navLabels: [
     { label: 'Project', path: '/project' },
     { label: "What's On", path: "/what's on" },
@@ -12,7 +13,10 @@ const fallbackSettings = {
   heroTagline: 'Architecture as Narrative',
   heroDescription: 'ACEN is a Jakarta-based architectural studio exploring culture, environment, and narrative through spatial research.',
   projectsSectionTitle: 'project',
+  projectsSectionSubtitle: '',
+  nextProjectLabel: 'NEXT PROJECT',
   newsSectionTitle: "what's on",
+  newsSectionSubtitle: '',
   aboutSectionTitle: 'about us',
   aboutHeroImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1600&auto=format&fit=crop',
   aboutParagraphs: [
@@ -22,6 +26,7 @@ const fallbackSettings = {
   ],
   recognitions: ['Prix Versailles', 'WAF Finalist', 'AR Emerging Architecture', 'Building of the Year', 'Dezeen Awards', 'IAI Design Award'],
   publications: ['ArchDaily', 'Designboom', 'Gooood', 'Architizer', 'STIR World', 'Superfuture', 'Elle Decor', 'Dezeen', 'C3 Magazine', 'Designverse', 'Indesignlive', 'Tecture Mag'],
+  studioEstablished: 'Est. 2019',
   teamSectionTitle: 'The Team',
   recognitionsSectionTitle: 'International Recognitions',
   publicationsSectionTitle: 'Featured In',

@@ -3,10 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
 import { getApiUrl, resolveImageUrl } from '../utils/api';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 export default function ProjectDetails() {
   const { id } = useParams();
+  const { settings } = useSiteSettings();
   const [project, setProject] = useState(null);
+  const [projectList, setProjectList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const resolveProjectFromList = useCallback((list) => {
@@ -38,6 +41,7 @@ export default function ProjectDetails() {
     }
 
     setProject(found);
+    setProjectList(list);
     setLoading(false);
   }, [id]);
 
@@ -60,6 +64,12 @@ export default function ProjectDetails() {
             setProject(data);
             setLoading(false);
           }
+          fetch(getApiUrl('/projects'))
+            .then((response) => (response.ok ? response.json() : []))
+            .then((list) => {
+              if (active && Array.isArray(list)) setProjectList(list);
+            })
+            .catch(() => {});
           return;
         }
 
@@ -99,6 +109,7 @@ export default function ProjectDetails() {
 
   // Gallery captions generator for context-rich details
   const getCaptionForImage = (projId, index) => {
+    if (project.imageCaptions?.[index]) return project.imageCaptions[index];
     const legacyId = project.title?.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const captions = {
       'chicken-hero-pavilion': [
@@ -214,6 +225,11 @@ export default function ProjectDetails() {
     transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }
   });
 
+  const currentIndex = projectList.findIndex((item) => item.id === project.id);
+  const nextProject = currentIndex >= 0 && projectList.length > 1
+    ? projectList[(currentIndex + 1) % projectList.length]
+    : null;
+
   return (
     <div className="absolute inset-0 w-full h-full overflow-y-auto z-40 bg-[#fbfbfa] dark:bg-[#0c0a09] selection:bg-stone-900/10 dark:selection:bg-white/10 flex flex-col transition-colors duration-300 lg:pl-[300px]">
       
@@ -279,7 +295,7 @@ export default function ProjectDetails() {
               />
             </div>
             <p className="font-mono text-[9px] tracking-wider text-stone-400 dark:text-[#6b6661] uppercase">
-              Fig. D-01 // Structural / Infographic Diagram
+              Fig. D-01 // {project.diagramCaption || 'Structural / Infographic Diagram'}
             </p>
           </div>
         </motion.section>
@@ -442,9 +458,18 @@ export default function ProjectDetails() {
           >
             ← Back to Archive
           </Link>
-          <span className="font-mono text-[9px] text-stone-400 dark:text-[#6b6661] tracking-wider uppercase">
-            ACEN STUDIO © {project.year}
-          </span>
+          {nextProject ? (
+            <Link
+              to={`/project/${nextProject.id}`}
+              className="font-mono text-[9px] text-stone-400 dark:text-[#6b6661] hover:text-stone-900 dark:hover:text-[#e6e0d8] tracking-wider uppercase transition-colors text-right"
+            >
+              {settings.nextProjectLabel || 'NEXT PROJECT'} → {nextProject.title}
+            </Link>
+          ) : (
+            <span className="font-mono text-[9px] text-stone-400 dark:text-[#6b6661] tracking-wider uppercase">
+              {(settings.studioName || 'ACEN STUDIO').toUpperCase()} © {project.year}
+            </span>
+          )}
         </div>
 
       </main>

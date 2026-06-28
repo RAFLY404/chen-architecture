@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../assets/logo.png';
 import { useTheme } from '../ThemeContext';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { normalizeNavItems } from '../utils/api';
+import SiteLogo from './SiteLogo';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,11 +18,7 @@ export default function Header() {
       <header className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 sm:px-10 py-6 sm:py-8 z-[70] pointer-events-auto">
         {/* Logo */}
         <a href="/" className={`hover:opacity-70 transition-opacity block ${isHome ? '' : 'lg:hidden'}`}>
-          <img
-            src={logo}
-            alt="ACEN Architecture"
-            className={`h-7 sm:h-10 w-auto object-contain transition-all duration-300 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
-          />
+          <SiteLogo className="h-7 sm:h-10 w-auto object-contain transition-all duration-300" />
         </a>
 
         <div className="flex items-center gap-4 lg:hidden">

@@ -69,6 +69,11 @@ export default function Project() {
           <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
             {settings.projectsSectionTitle || 'project'}
           </h1>
+          {settings.projectsSectionSubtitle && (
+            <p className="max-w-2xl font-karla text-sm leading-[1.7] text-stone-500 dark:text-[#8a8580] -mt-8">
+              {settings.projectsSectionSubtitle}
+            </p>
+          )}
         </motion.div>
 
         {/* Filter Controls */}
@@ -173,7 +178,7 @@ export default function Project() {
                         A
                       </div>
                       <span className="font-karla text-xs text-stone-600 dark:text-stone-400">
-                        ACEN Studio
+                        {settings.studioName || 'ACEN Studio'}
                       </span>
                       <span className="ml-auto font-karla text-[9px] text-stone-400 dark:text-stone-500">
                         {project.year}

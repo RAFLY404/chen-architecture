@@ -43,6 +43,11 @@ export default function WhatsOn() {
           <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
             {settings.newsSectionTitle || "what's on"}
           </h1>
+          {settings.newsSectionSubtitle && (
+            <p className="max-w-2xl font-karla text-sm leading-[1.7] text-stone-500 dark:text-[#8a8580] -mt-8">
+              {settings.newsSectionSubtitle}
+            </p>
+          )}
         </motion.div>
 
         {/* News Grid (2 Columns on desktop/tablet, 1 Column on mobile, 3rem / 48px gap) */}

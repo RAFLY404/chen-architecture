@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.png';
 import { useTheme } from '../ThemeContext';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { normalizeNavItems } from '../utils/api';
+import SiteLogo from './SiteLogo';
 
 export default function Sidebar({ activePage }) {
   const { theme, toggleTheme } = useTheme();
@@ -14,11 +14,7 @@ export default function Sidebar({ activePage }) {
       <div>
         {/* Logo */}
         <Link to="/" className="hover:opacity-70 transition-opacity block mb-12">
-          <img
-            src={logo}
-            alt="ACEN Architecture"
-            className={`h-7 w-auto object-contain transition-all duration-300 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
-          />
+          <SiteLogo className="h-7 w-auto object-contain transition-all duration-300" />
         </Link>
 
         {/* Navigation Links */}

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import logo from '../assets/logo.png';
-import { useTheme } from '../ThemeContext';
 import { getApiUrl, resolveImageUrl } from '../utils/api';
 import { useSiteSettings } from '../hooks/useSiteSettings';
+import SiteLogo from '../components/SiteLogo';
 
 const fallbackTeamMembers = [
   {
@@ -37,7 +36,6 @@ const fallbackTeamMembers = [
 ];
 
 export default function AboutUs() {
-  const { theme } = useTheme();
   const { settings } = useSiteSettings();
   const [teamMembers, setTeamMembers] = useState([]);
 
@@ -76,6 +74,11 @@ export default function AboutUs() {
           <h1 className="font-karla text-sm sm:text-base tracking-[0.15em] text-black dark:text-[#e6e0d8] lowercase mb-10 sm:mb-14">
             {settings.aboutSectionTitle || 'about us'}
           </h1>
+          {settings.studioEstablished && (
+            <p className="font-karla text-xs tracking-[0.2em] uppercase text-[#999999] dark:text-[#6b6661] mb-8">
+              {settings.studioEstablished}
+            </p>
+          )}
 
           <div className="w-full aspect-[16/9] md:aspect-[1580/1117] rounded-lg overflow-hidden mb-12 md:mb-16 relative bg-stone-100 dark:bg-[#151210]">
             <div
@@ -230,11 +233,7 @@ export default function AboutUs() {
           <div className="w-full h-px bg-stone-200/80 dark:bg-stone-800/40 mb-12 md:mb-16" />
 
           <div className="flex flex-col items-center gap-6 text-center">
-            <img
-              src={logo}
-              alt="ACEN Architecture"
-              className={`h-12 sm:h-16 w-auto object-contain ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
-            />
+            <SiteLogo className="h-12 sm:h-16 w-auto object-contain" />
 
             <div className="flex flex-col items-center gap-2">
               <span className="font-karla text-sm tracking-[0.1em] text-[#222222] dark:text-[#c8c4c0]">
@@ -249,7 +248,7 @@ export default function AboutUs() {
                 {settings.instagramHandle}
               </a>
               <span className="font-karla text-xs tracking-[0.1em] text-[#999999] dark:text-[#6b6661] mt-1">
-                © {settings.copyrightYear}
+                © {settings.copyrightYear} {settings.footerTagline}
               </span>
             </div>
           </div>
@@ -258,3 +257,5 @@ export default function AboutUs() {
     </div>
   );
 }
+
+
